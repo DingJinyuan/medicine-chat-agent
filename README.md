@@ -10,13 +10,13 @@
 
 做一个聊天循环最直接的方式，是把整个 agent 循环手写成一个函数，里面塞一堆 if。我想要的是请求流真正变成一个「图」，有一个有意义的条件分支：
 
-![image-20260813184353834](C:\Users\new\AppData\Roaming\Typora\typora-user-images\image-20260813184353834.png)
+![image-20260813184353834](images\image-20260813184353834.png)
 
 当分诊分类器以足够的置信度判为「emergency」时，图会**完全跳过检索和生成**，直接返回一个固定的安全回复——LLM 根本看不到这条输入。这是 `app/graph.py` 里真正的分支，不是埋在 handler 深处三层 if 里的、评审时没人会注意到的逻辑。
 
 ## 架构
 
-![image-20260813184804422](C:\Users\new\AppData\Roaming\Typora\typora-user-images\image-20260813184804422.png)
+![image-20260813184804422](images\image-20260813184804422.png)
 
 知识库是 MedlinePlus 的健康主题摘要，通过它的公开 webservices API 抓取（`app/ingestion.py`）。我特意不用常见的医疗 QA 数据集——很多数据集会因版权问题，把所有非美国政府来源的答案正文删掉。MedlinePlus 的内容是政府作品，属于公共领域，版权问题根本不存在。
 
@@ -87,7 +87,7 @@ npm run dev                  # http://localhost:3000
 
 ## 技术栈
 
-Python、FastAPI、LangChain、LangGraph、多厂商 LLM（通过 LLMClient 用 openai/anthropic SDK）、FAISS、fastembed、structlog、Prometheus、Hugging Face transformers + peft（LoRA 微调）、scikit-learn、pytest、Docker、Next.js 16、React 19、Tailwind v4、shadcn/ui，部署在 Render 和 Vercel。
+Python、FastAPI、LangChain、LangGraph、多厂商 LLM（通过 LLMClient 用 openai/anthropic SDK）、FAISS、fastembed、structlog、Prometheus、Hugging Face transformers + peft（LoRA 微调）、scikit-learn、pytest、Docker、Next.js 16、React 19、Tailwind v4、shadcn/ui，前后端分离（后端 Docker + render.yaml 可部署 Render，前端可部署 Vercel，配置已就绪）。
 
 ## 免责声明
 
