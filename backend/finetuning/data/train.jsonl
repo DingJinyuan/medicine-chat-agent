@@ -1,0 +1,488 @@
+{"text": "I'm dealing with mild muscle soreness after a workout yesterday.", "label": "self_care"}
+{"text": "I'm dealing with a seizure that has lasted more than five minutes.", "label": "emergency"}
+{"text": "I'm dealing with my lips and throat are swelling up and I can barely swallow after eating peanuts.", "label": "emergency"}
+{"text": "Lately I've noticed my lips and throat are swelling up and I can barely swallow after eating peanuts.", "label": "emergency"}
+{"text": "I woke up with chest tightness that started after exercise but isn't severe.", "label": "urgent"}
+{"text": "I woke up with my child swallowed a bottle of pills.", "label": "emergency"}
+{"text": "I woke up with a rash that's spreading fast with a fever.", "label": "urgent"}
+{"text": "I have mild muscle soreness after a workout yesterday.", "label": "self_care"}
+{"text": "I woke up with mild hiccups that started an hour ago.", "label": "self_care"}
+{"text": "I've been experiencing persistent vomiting and diarrhea and I feel very dehydrated.", "label": "urgent"}
+{"text": "My symptom is crushing chest pain radiating to my left arm.", "label": "emergency"}
+{"text": "For the past hour I've had a mole I'd like a doctor to take a look at eventually.", "label": "routine"}
+{"text": "Right now I have an eye injury after something splashed into it.", "label": "urgent"}
+{"text": "I'm dealing with I'd like a referral for a routine eye exam.", "label": "routine"}
+{"text": "I woke up with I want to ask about starting a new exercise routine safely.", "label": "routine"}
+{"text": "My symptom is persistent vomiting and diarrhea and I feel very dehydrated.", "label": "urgent"}
+{"text": "For the past hour I've had mild muscle soreness after a workout yesterday.", "label": "self_care"}
+{"text": "My symptom is worsening pain from what I think is a kidney stone.", "label": "urgent"}
+{"text": "I woke up with I'd like to schedule my annual checkup.", "label": "routine"}
+{"text": "I have a rash that's spreading fast with a fever.", "label": "urgent"}
+{"text": "I have occasional mild heartburn after spicy food.", "label": "self_care"}
+{"text": "I'm dealing with my asthma inhaler isn't helping and I'm still wheezing.", "label": "urgent"}
+{"text": "Right now I have crushing chest pain radiating to my left arm.", "label": "emergency"}
+{"text": "I've been experiencing mild joint stiffness in the mornings for the past few weeks.", "label": "routine"}
+{"text": "Lately I've noticed one side of my face is drooping and my speech is slurred.", "label": "emergency"}
+{"text": "I've been experiencing the worst headache of my life that came on all of a sudden.", "label": "emergency"}
+{"text": "I have severe abdominal pain and I can't stand up straight.", "label": "emergency"}
+{"text": "My symptom is a rash that's spreading fast with a fever.", "label": "urgent"}
+{"text": "I have migraines with light sensitivity that happen every few weeks and respond to my usual medication.", "label": "routine"}
+{"text": "Lately I've noticed migraines with light sensitivity that happen every few weeks and respond to my usual medication.", "label": "routine"}
+{"text": "For the past hour I've had I ran out of my insulin and my blood sugar readings are very high.", "label": "urgent"}
+{"text": "For the past hour I've had a sudden severe headache along with confusion and blurred vision.", "label": "emergency"}
+{"text": "My symptom is recurring mild headaches a couple times a month.", "label": "routine"}
+{"text": "Lately I've noticed a slight headache after a long day at the computer.", "label": "self_care"}
+{"text": "My symptom is a seizure that has lasted more than five minutes.", "label": "emergency"}
+{"text": "I have I twisted my ankle and it's swelling fast, maybe broken.", "label": "urgent"}
+{"text": "For the past hour I've had mild hiccups that started an hour ago.", "label": "self_care"}
+{"text": "Lately I've noticed a headache with mild light sensitivity that gets better after resting in a dark room.", "label": "self_care"}
+{"text": "I have worsening pain from what I think is a kidney stone.", "label": "urgent"}
+{"text": "I've been experiencing a urinary tract infection with fever and back pain.", "label": "urgent"}
+{"text": "For the past hour I've had occasional mild acid reflux after meals.", "label": "routine"}
+{"text": "Lately I've noticed my asthma inhaler isn't helping and I'm still wheezing.", "label": "urgent"}
+{"text": "My symptom is a deep cut on my hand that probably needs stitches.", "label": "urgent"}
+{"text": "I have a bad headache with sensitivity to light that lines up with my usual migraine pattern.", "label": "routine"}
+{"text": "My symptom is a minor sunburn on my shoulders.", "label": "self_care"}
+{"text": "I've been experiencing an eye injury after something splashed into it.", "label": "urgent"}
+{"text": "For the past hour I've had a fever of 103 that has lasted three days.", "label": "urgent"}
+{"text": "I'm dealing with my child swallowed a bottle of pills.", "label": "emergency"}
+{"text": "I've been experiencing a mole I'd like a doctor to take a look at eventually.", "label": "routine"}
+{"text": "I've been experiencing occasional mild acid reflux after meals.", "label": "routine"}
+{"text": "I've been experiencing a minor sunburn on my shoulders.", "label": "self_care"}
+{"text": "My symptom is a mole I'd like a doctor to take a look at eventually.", "label": "routine"}
+{"text": "I've been experiencing I'm vomiting blood.", "label": "emergency"}
+{"text": "Lately I've noticed I passed out and just regained consciousness confused.", "label": "emergency"}
+{"text": "I woke up with recurring mild headaches a couple times a month.", "label": "routine"}
+{"text": "Lately I've noticed the worst headache of my life that came on all of a sudden.", "label": "emergency"}
+{"text": "I woke up with persistent vomiting and diarrhea and I feel very dehydrated.", "label": "urgent"}
+{"text": "I have my child swallowed a bottle of pills.", "label": "emergency"}
+{"text": "I have mild joint stiffness in the mornings for the past few weeks.", "label": "routine"}
+{"text": "I'm dealing with a throbbing headache with nausea and light sensitivity that I get occasionally.", "label": "routine"}
+{"text": "Right now I have I was in a car accident and my leg looks deformed.", "label": "emergency"}
+{"text": "I've been experiencing a bad headache with sensitivity to light that lines up with my usual migraine pattern.", "label": "routine"}
+{"text": "I have a deep cut on my hand that probably needs stitches.", "label": "urgent"}
+{"text": "For the past hour I've had a small bruise from bumping into a table.", "label": "self_care"}
+{"text": "My symptom is my child swallowed a bottle of pills.", "label": "emergency"}
+{"text": "My symptom is severe abdominal pain and I can't stand up straight.", "label": "emergency"}
+{"text": "I'm dealing with a stuffy nose from seasonal pollen.", "label": "self_care"}
+{"text": "Lately I've noticed I think I'm having a heart attack.", "label": "emergency"}
+{"text": "My symptom is chest tightness that started after exercise but isn't severe.", "label": "urgent"}
+{"text": "I have a bad headache and I am sensitive to light, but I get this every month before my period.", "label": "routine"}
+{"text": "I'm dealing with I ran out of my insulin and my blood sugar readings are very high.", "label": "urgent"}
+{"text": "I woke up with a dog bit me and broke the skin.", "label": "urgent"}
+{"text": "My symptom is a dog bit me and broke the skin.", "label": "urgent"}
+{"text": "I have mild hiccups that started an hour ago.", "label": "self_care"}
+{"text": "I'm dealing with a runny nose and mild sore throat, feels like a common cold.", "label": "self_care"}
+{"text": "I woke up with a mole I'd like a doctor to take a look at eventually.", "label": "routine"}
+{"text": "For the past hour I've had sudden difficulty breathing and I'm gasping for air.", "label": "emergency"}
+{"text": "I woke up with crushing chest pain radiating to my left arm.", "label": "emergency"}
+{"text": "I'm dealing with occasional mild acid reflux after meals.", "label": "routine"}
+{"text": "Lately I've noticed sudden severe ear pain with hearing loss.", "label": "urgent"}
+{"text": "I have I was in a car accident and my leg looks deformed.", "label": "emergency"}
+{"text": "Lately I've noticed my child swallowed a bottle of pills.", "label": "emergency"}
+{"text": "I have I'd like a referral for a routine eye exam.", "label": "routine"}
+{"text": "For the past hour I've had a dog bit me and broke the skin.", "label": "urgent"}
+{"text": "I'm dealing with migraines with light sensitivity that happen every few weeks and respond to my usual medication.", "label": "routine"}
+{"text": "I've been experiencing I'm bleeding heavily and it won't stop after ten minutes.", "label": "emergency"}
+{"text": "Lately I've noticed I'm vomiting blood.", "label": "emergency"}
+{"text": "For the past hour I've had slight fatigue after a poor night's sleep.", "label": "self_care"}
+{"text": "I'm dealing with a bad headache with sensitivity to light that lines up with my usual migraine pattern.", "label": "routine"}
+{"text": "Right now I have a rash that's spreading fast with a fever.", "label": "urgent"}
+{"text": "Right now I have a bad headache and I am sensitive to light, but resting in a quiet dark room usually helps.", "label": "self_care"}
+{"text": "Right now I have my child swallowed a bottle of pills.", "label": "emergency"}
+{"text": "For the past hour I've had persistent vomiting and diarrhea and I feel very dehydrated.", "label": "urgent"}
+{"text": "I have a small bruise from bumping into a table.", "label": "self_care"}
+{"text": "Right now I have a bad headache with sensitivity to light that lines up with my usual migraine pattern.", "label": "routine"}
+{"text": "Right now I have a urinary tract infection with fever and back pain.", "label": "urgent"}
+{"text": "Lately I've noticed I'd like to schedule my annual checkup.", "label": "routine"}
+{"text": "I'm dealing with mild joint stiffness in the mornings for the past few weeks.", "label": "routine"}
+{"text": "I have mild seasonal allergies that come back every spring.", "label": "routine"}
+{"text": "Lately I've noticed I have thoughts of ending my life right now.", "label": "emergency"}
+{"text": "For the past hour I've had a bad headache with sensitivity to light that lines up with my usual migraine pattern.", "label": "routine"}
+{"text": "I have a bad headache with sensitivity to light after a stressful day, nothing like before.", "label": "self_care"}
+{"text": "Right now I have a small paper cut on my finger.", "label": "self_care"}
+{"text": "Lately I've noticed a small paper cut on my finger.", "label": "self_care"}
+{"text": "I've been experiencing a bad headache and I am sensitive to light, but I get this every month before my period.", "label": "routine"}
+{"text": "I woke up with I passed out and just regained consciousness confused.", "label": "emergency"}
+{"text": "For the past hour I've had chest tightness that started after exercise but isn't severe.", "label": "urgent"}
+{"text": "Lately I've noticed a headache that started after hitting my head hard and I feel drowsy.", "label": "emergency"}
+{"text": "I've been experiencing I think I'm having a heart attack.", "label": "emergency"}
+{"text": "For the past hour I've had I'd like a referral for a routine eye exam.", "label": "routine"}
+{"text": "Right now I have a fever of 103 that has lasted three days.", "label": "urgent"}
+{"text": "I have slight fatigue after a poor night's sleep.", "label": "self_care"}
+{"text": "Right now I have a minor sunburn on my shoulders.", "label": "self_care"}
+{"text": "Right now I have I'm bleeding heavily and it won't stop after ten minutes.", "label": "emergency"}
+{"text": "I'm dealing with a dog bit me and broke the skin.", "label": "urgent"}
+{"text": "I have sudden difficulty breathing and I'm gasping for air.", "label": "emergency"}
+{"text": "Lately I've noticed a small skin rash that isn't spreading or itching much.", "label": "routine"}
+{"text": "I'm dealing with a small bruise from bumping into a table.", "label": "self_care"}
+{"text": "I'm dealing with follow-up on my cholesterol test results from last month.", "label": "routine"}
+{"text": "Lately I've noticed a fever of 103 that has lasted three days.", "label": "urgent"}
+{"text": "Right now I have a small bruise from bumping into a table.", "label": "self_care"}
+{"text": "For the past hour I've had my asthma inhaler isn't helping and I'm still wheezing.", "label": "urgent"}
+{"text": "My symptom is a headache that started after hitting my head hard and I feel drowsy.", "label": "emergency"}
+{"text": "My symptom is mild seasonal allergies that come back every spring.", "label": "routine"}
+{"text": "My symptom is follow-up on my cholesterol test results from last month.", "label": "routine"}
+{"text": "I have I'm vomiting blood.", "label": "emergency"}
+{"text": "I'm dealing with a little bit of dry, itchy skin in winter.", "label": "self_care"}
+{"text": "For the past hour I've had I'd like to schedule my annual checkup.", "label": "routine"}
+{"text": "I've been experiencing crushing chest pain radiating to my left arm.", "label": "emergency"}
+{"text": "I woke up with I'd like a referral for a routine eye exam.", "label": "routine"}
+{"text": "Right now I have I ran out of my insulin and my blood sugar readings are very high.", "label": "urgent"}
+{"text": "I'm dealing with a small skin rash that isn't spreading or itching much.", "label": "routine"}
+{"text": "My symptom is I'm vomiting blood.", "label": "emergency"}
+{"text": "My symptom is mild joint stiffness in the mornings for the past few weeks.", "label": "routine"}
+{"text": "For the past hour I've had a bad headache and I am sensitive to light, but I get this every month before my period.", "label": "routine"}
+{"text": "I've been experiencing a dog bit me and broke the skin.", "label": "urgent"}
+{"text": "My symptom is occasional mild acid reflux after meals.", "label": "routine"}
+{"text": "For the past hour I've had a stuffy nose from seasonal pollen.", "label": "self_care"}
+{"text": "Lately I've noticed occasional mild heartburn after spicy food.", "label": "self_care"}
+{"text": "I've been experiencing a headache that started after hitting my head hard and I feel drowsy.", "label": "emergency"}
+{"text": "For the past hour I've had a deep cut on my hand that probably needs stitches.", "label": "urgent"}
+{"text": "Lately I've noticed a seizure that has lasted more than five minutes.", "label": "emergency"}
+{"text": "My symptom is a slight headache after a long day at the computer.", "label": "self_care"}
+{"text": "I'm dealing with persistent vomiting and diarrhea and I feel very dehydrated.", "label": "urgent"}
+{"text": "Right now I have a small skin rash that isn't spreading or itching much.", "label": "routine"}
+{"text": "I woke up with a small paper cut on my finger.", "label": "self_care"}
+{"text": "I'm dealing with I twisted my ankle and it's swelling fast, maybe broken.", "label": "urgent"}
+{"text": "I'm dealing with slight fatigue after a poor night's sleep.", "label": "self_care"}
+{"text": "Right now I have my asthma inhaler isn't helping and I'm still wheezing.", "label": "urgent"}
+{"text": "I woke up with worsening pain from what I think is a kidney stone.", "label": "urgent"}
+{"text": "Right now I have I twisted my ankle and it's swelling fast, maybe broken.", "label": "urgent"}
+{"text": "I'm dealing with one side of my face is drooping and my speech is slurred.", "label": "emergency"}
+{"text": "My symptom is occasional mild heartburn after spicy food.", "label": "self_care"}
+{"text": "My symptom is one side of my face is drooping and my speech is slurred.", "label": "emergency"}
+{"text": "I've been experiencing a seizure that has lasted more than five minutes.", "label": "emergency"}
+{"text": "I've been experiencing a deep cut on my hand that probably needs stitches.", "label": "urgent"}
+{"text": "For the past hour I've had migraines with light sensitivity that happen every few weeks and respond to my usual medication.", "label": "routine"}
+{"text": "I have recurring mild headaches a couple times a month.", "label": "routine"}
+{"text": "My symptom is a small bruise from bumping into a table.", "label": "self_care"}
+{"text": "I woke up with migraines with light sensitivity that happen every few weeks and respond to my usual medication.", "label": "routine"}
+{"text": "Lately I've noticed I twisted my ankle and it's swelling fast, maybe broken.", "label": "urgent"}
+{"text": "Right now I have mild muscle soreness after a workout yesterday.", "label": "self_care"}
+{"text": "I have a slight headache after a long day at the computer.", "label": "self_care"}
+{"text": "Lately I've noticed a bad headache with sensitivity to light that lines up with my usual migraine pattern.", "label": "routine"}
+{"text": "I'm dealing with occasional mild heartburn after spicy food.", "label": "self_care"}
+{"text": "Right now I have a bad headache with sensitivity to light after a stressful day, nothing like before.", "label": "self_care"}
+{"text": "I have a bad headache and I am sensitive to light, but resting in a quiet dark room usually helps.", "label": "self_care"}
+{"text": "I woke up with sudden difficulty breathing and I'm gasping for air.", "label": "emergency"}
+{"text": "Right now I have the worst headache of my life that came on all of a sudden.", "label": "emergency"}
+{"text": "For the past hour I've had I'm vomiting blood.", "label": "emergency"}
+{"text": "I have my asthma inhaler isn't helping and I'm still wheezing.", "label": "urgent"}
+{"text": "Right now I have I passed out and just regained consciousness confused.", "label": "emergency"}
+{"text": "For the past hour I've had worsening pain from what I think is a kidney stone.", "label": "urgent"}
+{"text": "I'm dealing with an eye injury after something splashed into it.", "label": "urgent"}
+{"text": "For the past hour I've had a headache with mild light sensitivity that gets better after resting in a dark room.", "label": "self_care"}
+{"text": "My symptom is my asthma inhaler isn't helping and I'm still wheezing.", "label": "urgent"}
+{"text": "I've been experiencing mild hiccups that started an hour ago.", "label": "self_care"}
+{"text": "I've been experiencing a bad headache and I am sensitive to light, but resting in a quiet dark room usually helps.", "label": "self_care"}
+{"text": "For the past hour I've had a headache that started after hitting my head hard and I feel drowsy.", "label": "emergency"}
+{"text": "For the past hour I've had severe abdominal pain and I can't stand up straight.", "label": "emergency"}
+{"text": "Lately I've noticed mild hiccups that started an hour ago.", "label": "self_care"}
+{"text": "I'm dealing with severe abdominal pain and I can't stand up straight.", "label": "emergency"}
+{"text": "I woke up with a slight headache after a long day at the computer.", "label": "self_care"}
+{"text": "I woke up with I want to discuss adjusting my blood pressure medication.", "label": "routine"}
+{"text": "I've been experiencing a small paper cut on my finger.", "label": "self_care"}
+{"text": "I woke up with mild joint stiffness in the mornings for the past few weeks.", "label": "routine"}
+{"text": "My symptom is migraines with light sensitivity that happen every few weeks and respond to my usual medication.", "label": "routine"}
+{"text": "Right now I have mild joint stiffness in the mornings for the past few weeks.", "label": "routine"}
+{"text": "I'm dealing with sudden severe ear pain with hearing loss.", "label": "urgent"}
+{"text": "I've been experiencing my lips and throat are swelling up and I can barely swallow after eating peanuts.", "label": "emergency"}
+{"text": "Right now I have a runny nose and mild sore throat, feels like a common cold.", "label": "self_care"}
+{"text": "Right now I have a little bit of dry, itchy skin in winter.", "label": "self_care"}
+{"text": "I'm dealing with a bad headache and I am sensitive to light, but resting in a quiet dark room usually helps.", "label": "self_care"}
+{"text": "Lately I've noticed mild joint stiffness in the mornings for the past few weeks.", "label": "routine"}
+{"text": "I woke up with a runny nose and mild sore throat, feels like a common cold.", "label": "self_care"}
+{"text": "Lately I've noticed mild constipation after traveling.", "label": "self_care"}
+{"text": "I'm dealing with a urinary tract infection with fever and back pain.", "label": "urgent"}
+{"text": "For the past hour I've had mild constipation after traveling.", "label": "self_care"}
+{"text": "I'm dealing with sudden weakness on one side of my body.", "label": "emergency"}
+{"text": "For the past hour I've had one side of my face is drooping and my speech is slurred.", "label": "emergency"}
+{"text": "I've been experiencing my asthma inhaler isn't helping and I'm still wheezing.", "label": "urgent"}
+{"text": "I woke up with sudden weakness on one side of my body.", "label": "emergency"}
+{"text": "I'm dealing with I'd like to schedule my annual checkup.", "label": "routine"}
+{"text": "Lately I've noticed I'd like a referral for a routine eye exam.", "label": "routine"}
+{"text": "I've been experiencing chest tightness that started after exercise but isn't severe.", "label": "urgent"}
+{"text": "I'm dealing with I want to ask about starting a new exercise routine safely.", "label": "routine"}
+{"text": "I'm dealing with mild constipation after traveling.", "label": "self_care"}
+{"text": "I have a runny nose and mild sore throat, feels like a common cold.", "label": "self_care"}
+{"text": "I've been experiencing a bad headache with sensitivity to light after a stressful day, nothing like before.", "label": "self_care"}
+{"text": "I've been experiencing occasional mild heartburn after spicy food.", "label": "self_care"}
+{"text": "I have a minor sunburn on my shoulders.", "label": "self_care"}
+{"text": "For the past hour I've had I'm bleeding heavily and it won't stop after ten minutes.", "label": "emergency"}
+{"text": "I've been experiencing mild muscle soreness after a workout yesterday.", "label": "self_care"}
+{"text": "I woke up with I have thoughts of ending my life right now.", "label": "emergency"}
+{"text": "I woke up with a bad headache with sensitivity to light that lines up with my usual migraine pattern.", "label": "routine"}
+{"text": "Right now I have severe abdominal pain and I can't stand up straight.", "label": "emergency"}
+{"text": "Lately I've noticed slight fatigue after a poor night's sleep.", "label": "self_care"}
+{"text": "I'm dealing with I'm bleeding heavily and it won't stop after ten minutes.", "label": "emergency"}
+{"text": "My symptom is a throbbing headache with nausea and light sensitivity that I get occasionally.", "label": "routine"}
+{"text": "Right now I have a deep cut on my hand that probably needs stitches.", "label": "urgent"}
+{"text": "I woke up with occasional mild heartburn after spicy food.", "label": "self_care"}
+{"text": "Right now I have a stuffy nose from seasonal pollen.", "label": "self_care"}
+{"text": "I have a headache with mild light sensitivity that gets better after resting in a dark room.", "label": "self_care"}
+{"text": "Lately I've noticed a urinary tract infection with fever and back pain.", "label": "urgent"}
+{"text": "I woke up with a headache with mild light sensitivity that gets better after resting in a dark room.", "label": "self_care"}
+{"text": "I'm dealing with I think I'm having a heart attack.", "label": "emergency"}
+{"text": "Lately I've noticed I want to discuss adjusting my blood pressure medication.", "label": "routine"}
+{"text": "I've been experiencing my child swallowed a bottle of pills.", "label": "emergency"}
+{"text": "I have a little bit of dry, itchy skin in winter.", "label": "self_care"}
+{"text": "I have an eye injury after something splashed into it.", "label": "urgent"}
+{"text": "Lately I've noticed occasional mild acid reflux after meals.", "label": "routine"}
+{"text": "My symptom is I'd like a referral for a routine eye exam.", "label": "routine"}
+{"text": "I have the worst headache of my life that came on all of a sudden.", "label": "emergency"}
+{"text": "I have I think I'm having a heart attack.", "label": "emergency"}
+{"text": "I woke up with I ran out of my insulin and my blood sugar readings are very high.", "label": "urgent"}
+{"text": "I woke up with sudden severe ear pain with hearing loss.", "label": "urgent"}
+{"text": "I have I ran out of my insulin and my blood sugar readings are very high.", "label": "urgent"}
+{"text": "I woke up with a sudden severe headache along with confusion and blurred vision.", "label": "emergency"}
+{"text": "I'm dealing with I was in a car accident and my leg looks deformed.", "label": "emergency"}
+{"text": "For the past hour I've had I twisted my ankle and it's swelling fast, maybe broken.", "label": "urgent"}
+{"text": "I've been experiencing I twisted my ankle and it's swelling fast, maybe broken.", "label": "urgent"}
+{"text": "I'm dealing with chest tightness that started after exercise but isn't severe.", "label": "urgent"}
+{"text": "I'm dealing with a slight headache after a long day at the computer.", "label": "self_care"}
+{"text": "I have a throbbing headache with nausea and light sensitivity that I get occasionally.", "label": "routine"}
+{"text": "Right now I have follow-up on my cholesterol test results from last month.", "label": "routine"}
+{"text": "My symptom is a small paper cut on my finger.", "label": "self_care"}
+{"text": "I woke up with a bad headache and I am sensitive to light, but I get this every month before my period.", "label": "routine"}
+{"text": "My symptom is I was in a car accident and my leg looks deformed.", "label": "emergency"}
+{"text": "For the past hour I've had an eye injury after something splashed into it.", "label": "urgent"}
+{"text": "For the past hour I've had I want to ask about starting a new exercise routine safely.", "label": "routine"}
+{"text": "My symptom is a sudden severe headache along with confusion and blurred vision.", "label": "emergency"}
+{"text": "For the past hour I've had a seizure that has lasted more than five minutes.", "label": "emergency"}
+{"text": "I've been experiencing one side of my face is drooping and my speech is slurred.", "label": "emergency"}
+{"text": "Lately I've noticed a bad headache with sensitivity to light after a stressful day, nothing like before.", "label": "self_care"}
+{"text": "My symptom is a urinary tract infection with fever and back pain.", "label": "urgent"}
+{"text": "For the past hour I've had a runny nose and mild sore throat, feels like a common cold.", "label": "self_care"}
+{"text": "I've been experiencing I passed out and just regained consciousness confused.", "label": "emergency"}
+{"text": "I woke up with a small skin rash that isn't spreading or itching much.", "label": "routine"}
+{"text": "I woke up with I'm bleeding heavily and it won't stop after ten minutes.", "label": "emergency"}
+{"text": "Right now I have occasional mild heartburn after spicy food.", "label": "self_care"}
+{"text": "I'm dealing with mild hiccups that started an hour ago.", "label": "self_care"}
+{"text": "I'm dealing with mild seasonal allergies that come back every spring.", "label": "routine"}
+{"text": "My symptom is a runny nose and mild sore throat, feels like a common cold.", "label": "self_care"}
+{"text": "I've been experiencing sudden difficulty breathing and I'm gasping for air.", "label": "emergency"}
+{"text": "Lately I've noticed an eye injury after something splashed into it.", "label": "urgent"}
+{"text": "Lately I've noticed ongoing lower back stiffness after sitting all day.", "label": "routine"}
+{"text": "For the past hour I've had sudden weakness on one side of my body.", "label": "emergency"}
+{"text": "I've been experiencing I want to ask about starting a new exercise routine safely.", "label": "routine"}
+{"text": "Lately I've noticed a sudden severe headache along with confusion and blurred vision.", "label": "emergency"}
+{"text": "Right now I have chest tightness that started after exercise but isn't severe.", "label": "urgent"}
+{"text": "I have occasional mild acid reflux after meals.", "label": "routine"}
+{"text": "I have chest tightness that started after exercise but isn't severe.", "label": "urgent"}
+{"text": "I've been experiencing ongoing lower back stiffness after sitting all day.", "label": "routine"}
+{"text": "For the past hour I've had mild seasonal allergies that come back every spring.", "label": "routine"}
+{"text": "Right now I have persistent vomiting and diarrhea and I feel very dehydrated.", "label": "urgent"}
+{"text": "I woke up with severe abdominal pain and I can't stand up straight.", "label": "emergency"}
+{"text": "Right now I have a throbbing headache with nausea and light sensitivity that I get occasionally.", "label": "routine"}
+{"text": "For the past hour I've had follow-up on my cholesterol test results from last month.", "label": "routine"}
+{"text": "I've been experiencing follow-up on my cholesterol test results from last month.", "label": "routine"}
+{"text": "I have ongoing lower back stiffness after sitting all day.", "label": "routine"}
+{"text": "My symptom is I want to ask about starting a new exercise routine safely.", "label": "routine"}
+{"text": "My symptom is I have thoughts of ending my life right now.", "label": "emergency"}
+{"text": "I'm dealing with recurring mild headaches a couple times a month.", "label": "routine"}
+{"text": "For the past hour I've had mild joint stiffness in the mornings for the past few weeks.", "label": "routine"}
+{"text": "I'm dealing with a headache that started after hitting my head hard and I feel drowsy.", "label": "emergency"}
+{"text": "I have a headache that started after hitting my head hard and I feel drowsy.", "label": "emergency"}
+{"text": "I have I want to discuss adjusting my blood pressure medication.", "label": "routine"}
+{"text": "Lately I've noticed a minor sunburn on my shoulders.", "label": "self_care"}
+{"text": "I have I'd like to schedule my annual checkup.", "label": "routine"}
+{"text": "For the past hour I've had my lips and throat are swelling up and I can barely swallow after eating peanuts.", "label": "emergency"}
+{"text": "Right now I have a headache with mild light sensitivity that gets better after resting in a dark room.", "label": "self_care"}
+{"text": "Lately I've noticed follow-up on my cholesterol test results from last month.", "label": "routine"}
+{"text": "For the past hour I've had I was in a car accident and my leg looks deformed.", "label": "emergency"}
+{"text": "Lately I've noticed I'm bleeding heavily and it won't stop after ten minutes.", "label": "emergency"}
+{"text": "I've been experiencing I was in a car accident and my leg looks deformed.", "label": "emergency"}
+{"text": "Lately I've noticed persistent vomiting and diarrhea and I feel very dehydrated.", "label": "urgent"}
+{"text": "Lately I've noticed a small bruise from bumping into a table.", "label": "self_care"}
+{"text": "I have a mole I'd like a doctor to take a look at eventually.", "label": "routine"}
+{"text": "I'm dealing with sudden difficulty breathing and I'm gasping for air.", "label": "emergency"}
+{"text": "I've been experiencing I'd like to schedule my annual checkup.", "label": "routine"}
+{"text": "Lately I've noticed a deep cut on my hand that probably needs stitches.", "label": "urgent"}
+{"text": "I have crushing chest pain radiating to my left arm.", "label": "emergency"}
+{"text": "Right now I have occasional mild acid reflux after meals.", "label": "routine"}
+{"text": "My symptom is I want to discuss adjusting my blood pressure medication.", "label": "routine"}
+{"text": "I've been experiencing I have thoughts of ending my life right now.", "label": "emergency"}
+{"text": "Right now I have worsening pain from what I think is a kidney stone.", "label": "urgent"}
+{"text": "For the past hour I've had a bad headache and I am sensitive to light, but resting in a quiet dark room usually helps.", "label": "self_care"}
+{"text": "Lately I've noticed a stuffy nose from seasonal pollen.", "label": "self_care"}
+{"text": "Lately I've noticed mild muscle soreness after a workout yesterday.", "label": "self_care"}
+{"text": "I have persistent vomiting and diarrhea and I feel very dehydrated.", "label": "urgent"}
+{"text": "I woke up with the worst headache of my life that came on all of a sudden.", "label": "emergency"}
+{"text": "For the past hour I've had a small skin rash that isn't spreading or itching much.", "label": "routine"}
+{"text": "For the past hour I've had my child swallowed a bottle of pills.", "label": "emergency"}
+{"text": "I have a small skin rash that isn't spreading or itching much.", "label": "routine"}
+{"text": "Right now I have mild seasonal allergies that come back every spring.", "label": "routine"}
+{"text": "I'm dealing with crushing chest pain radiating to my left arm.", "label": "emergency"}
+{"text": "I've been experiencing a headache with mild light sensitivity that gets better after resting in a dark room.", "label": "self_care"}
+{"text": "I have I have thoughts of ending my life right now.", "label": "emergency"}
+{"text": "I woke up with a urinary tract infection with fever and back pain.", "label": "urgent"}
+{"text": "My symptom is a bad headache with sensitivity to light after a stressful day, nothing like before.", "label": "self_care"}
+{"text": "I woke up with mild constipation after traveling.", "label": "self_care"}
+{"text": "For the past hour I've had a little bit of dry, itchy skin in winter.", "label": "self_care"}
+{"text": "I've been experiencing a slight headache after a long day at the computer.", "label": "self_care"}
+{"text": "I'm dealing with a minor sunburn on my shoulders.", "label": "self_care"}
+{"text": "I've been experiencing a sudden severe headache along with confusion and blurred vision.", "label": "emergency"}
+{"text": "Lately I've noticed crushing chest pain radiating to my left arm.", "label": "emergency"}
+{"text": "For the past hour I've had recurring mild headaches a couple times a month.", "label": "routine"}
+{"text": "I have a seizure that has lasted more than five minutes.", "label": "emergency"}
+{"text": "I woke up with occasional mild acid reflux after meals.", "label": "routine"}
+{"text": "Right now I have sudden severe ear pain with hearing loss.", "label": "urgent"}
+{"text": "I woke up with ongoing lower back stiffness after sitting all day.", "label": "routine"}
+{"text": "For the past hour I've had a rash that's spreading fast with a fever.", "label": "urgent"}
+{"text": "Lately I've noticed a rash that's spreading fast with a fever.", "label": "urgent"}
+{"text": "I have I passed out and just regained consciousness confused.", "label": "emergency"}
+{"text": "I'm dealing with a bad headache and I am sensitive to light, but I get this every month before my period.", "label": "routine"}
+{"text": "My symptom is a little bit of dry, itchy skin in winter.", "label": "self_care"}
+{"text": "I woke up with a little bit of dry, itchy skin in winter.", "label": "self_care"}
+{"text": "For the past hour I've had a bad headache with sensitivity to light after a stressful day, nothing like before.", "label": "self_care"}
+{"text": "I woke up with I'm vomiting blood.", "label": "emergency"}
+{"text": "I have a sudden severe headache along with confusion and blurred vision.", "label": "emergency"}
+{"text": "I have I'm bleeding heavily and it won't stop after ten minutes.", "label": "emergency"}
+{"text": "I woke up with my lips and throat are swelling up and I can barely swallow after eating peanuts.", "label": "emergency"}
+{"text": "My symptom is I'd like to schedule my annual checkup.", "label": "routine"}
+{"text": "My symptom is a small skin rash that isn't spreading or itching much.", "label": "routine"}
+{"text": "I woke up with a headache that started after hitting my head hard and I feel drowsy.", "label": "emergency"}
+{"text": "I have a small paper cut on my finger.", "label": "self_care"}
+{"text": "I'm dealing with a bad headache with sensitivity to light after a stressful day, nothing like before.", "label": "self_care"}
+{"text": "My symptom is I ran out of my insulin and my blood sugar readings are very high.", "label": "urgent"}
+{"text": "I've been experiencing a throbbing headache with nausea and light sensitivity that I get occasionally.", "label": "routine"}
+{"text": "For the past hour I've had a urinary tract infection with fever and back pain.", "label": "urgent"}
+{"text": "For the past hour I've had a throbbing headache with nausea and light sensitivity that I get occasionally.", "label": "routine"}
+{"text": "I woke up with a seizure that has lasted more than five minutes.", "label": "emergency"}
+{"text": "For the past hour I've had I want to discuss adjusting my blood pressure medication.", "label": "routine"}
+{"text": "I woke up with a stuffy nose from seasonal pollen.", "label": "self_care"}
+{"text": "I woke up with I was in a car accident and my leg looks deformed.", "label": "emergency"}
+{"text": "I have mild constipation after traveling.", "label": "self_care"}
+{"text": "I woke up with a minor sunburn on my shoulders.", "label": "self_care"}
+{"text": "I'm dealing with I'm vomiting blood.", "label": "emergency"}
+{"text": "I've been experiencing sudden severe ear pain with hearing loss.", "label": "urgent"}
+{"text": "I'm dealing with ongoing lower back stiffness after sitting all day.", "label": "routine"}
+{"text": "I've been experiencing I ran out of my insulin and my blood sugar readings are very high.", "label": "urgent"}
+{"text": "Right now I have I'd like to schedule my annual checkup.", "label": "routine"}
+{"text": "Right now I have ongoing lower back stiffness after sitting all day.", "label": "routine"}
+{"text": "My symptom is a stuffy nose from seasonal pollen.", "label": "self_care"}
+{"text": "I've been experiencing a runny nose and mild sore throat, feels like a common cold.", "label": "self_care"}
+{"text": "I've been experiencing migraines with light sensitivity that happen every few weeks and respond to my usual medication.", "label": "routine"}
+{"text": "My symptom is I think I'm having a heart attack.", "label": "emergency"}
+{"text": "I'm dealing with I passed out and just regained consciousness confused.", "label": "emergency"}
+{"text": "I'm dealing with a fever of 103 that has lasted three days.", "label": "urgent"}
+{"text": "Lately I've noticed I ran out of my insulin and my blood sugar readings are very high.", "label": "urgent"}
+{"text": "I'm dealing with a deep cut on my hand that probably needs stitches.", "label": "urgent"}
+{"text": "I woke up with slight fatigue after a poor night's sleep.", "label": "self_care"}
+{"text": "Lately I've noticed sudden weakness on one side of my body.", "label": "emergency"}
+{"text": "My symptom is I'm bleeding heavily and it won't stop after ten minutes.", "label": "emergency"}
+{"text": "I woke up with a deep cut on my hand that probably needs stitches.", "label": "urgent"}
+{"text": "I woke up with mild seasonal allergies that come back every spring.", "label": "routine"}
+{"text": "Right now I have mild hiccups that started an hour ago.", "label": "self_care"}
+{"text": "Lately I've noticed recurring mild headaches a couple times a month.", "label": "routine"}
+{"text": "I have I want to ask about starting a new exercise routine safely.", "label": "routine"}
+{"text": "Right now I have mild constipation after traveling.", "label": "self_care"}
+{"text": "I've been experiencing a fever of 103 that has lasted three days.", "label": "urgent"}
+{"text": "My symptom is a headache with mild light sensitivity that gets better after resting in a dark room.", "label": "self_care"}
+{"text": "My symptom is sudden severe ear pain with hearing loss.", "label": "urgent"}
+{"text": "Right now I have a slight headache after a long day at the computer.", "label": "self_care"}
+{"text": "I've been experiencing mild constipation after traveling.", "label": "self_care"}
+{"text": "For the past hour I've had a minor sunburn on my shoulders.", "label": "self_care"}
+{"text": "I'm dealing with I want to discuss adjusting my blood pressure medication.", "label": "routine"}
+{"text": "Right now I have I have thoughts of ending my life right now.", "label": "emergency"}
+{"text": "I'm dealing with a headache with mild light sensitivity that gets better after resting in a dark room.", "label": "self_care"}
+{"text": "Right now I have a bad headache and I am sensitive to light, but I get this every month before my period.", "label": "routine"}
+{"text": "My symptom is I passed out and just regained consciousness confused.", "label": "emergency"}
+{"text": "For the past hour I've had ongoing lower back stiffness after sitting all day.", "label": "routine"}
+{"text": "Lately I've noticed mild seasonal allergies that come back every spring.", "label": "routine"}
+{"text": "I've been experiencing a stuffy nose from seasonal pollen.", "label": "self_care"}
+{"text": "I have a fever of 103 that has lasted three days.", "label": "urgent"}
+{"text": "Right now I have I'd like a referral for a routine eye exam.", "label": "routine"}
+{"text": "For the past hour I've had I think I'm having a heart attack.", "label": "emergency"}
+{"text": "Lately I've noticed a dog bit me and broke the skin.", "label": "urgent"}
+{"text": "Lately I've noticed worsening pain from what I think is a kidney stone.", "label": "urgent"}
+{"text": "For the past hour I've had I have thoughts of ending my life right now.", "label": "emergency"}
+{"text": "I've been experiencing worsening pain from what I think is a kidney stone.", "label": "urgent"}
+{"text": "Lately I've noticed a mole I'd like a doctor to take a look at eventually.", "label": "routine"}
+{"text": "I have sudden severe ear pain with hearing loss.", "label": "urgent"}
+{"text": "I've been experiencing a little bit of dry, itchy skin in winter.", "label": "self_care"}
+{"text": "For the past hour I've had occasional mild heartburn after spicy food.", "label": "self_care"}
+{"text": "For the past hour I've had the worst headache of my life that came on all of a sudden.", "label": "emergency"}
+{"text": "I've been experiencing slight fatigue after a poor night's sleep.", "label": "self_care"}
+{"text": "I woke up with a bad headache with sensitivity to light after a stressful day, nothing like before.", "label": "self_care"}
+{"text": "My symptom is I twisted my ankle and it's swelling fast, maybe broken.", "label": "urgent"}
+{"text": "For the past hour I've had a slight headache after a long day at the computer.", "label": "self_care"}
+{"text": "My symptom is sudden weakness on one side of my body.", "label": "emergency"}
+{"text": "I've been experiencing I'd like a referral for a routine eye exam.", "label": "routine"}
+{"text": "Right now I have one side of my face is drooping and my speech is slurred.", "label": "emergency"}
+{"text": "For the past hour I've had I passed out and just regained consciousness confused.", "label": "emergency"}
+{"text": "I have follow-up on my cholesterol test results from last month.", "label": "routine"}
+{"text": "I've been experiencing severe abdominal pain and I can't stand up straight.", "label": "emergency"}
+{"text": "Right now I have migraines with light sensitivity that happen every few weeks and respond to my usual medication.", "label": "routine"}
+{"text": "I'm dealing with worsening pain from what I think is a kidney stone.", "label": "urgent"}
+{"text": "My symptom is a bad headache with sensitivity to light that lines up with my usual migraine pattern.", "label": "routine"}
+{"text": "I'm dealing with a mole I'd like a doctor to take a look at eventually.", "label": "routine"}
+{"text": "I woke up with I twisted my ankle and it's swelling fast, maybe broken.", "label": "urgent"}
+{"text": "I've been experiencing recurring mild headaches a couple times a month.", "label": "routine"}
+{"text": "I have my lips and throat are swelling up and I can barely swallow after eating peanuts.", "label": "emergency"}
+{"text": "I'm dealing with a rash that's spreading fast with a fever.", "label": "urgent"}
+{"text": "Right now I have a sudden severe headache along with confusion and blurred vision.", "label": "emergency"}
+{"text": "I've been experiencing I want to discuss adjusting my blood pressure medication.", "label": "routine"}
+{"text": "For the past hour I've had sudden severe ear pain with hearing loss.", "label": "urgent"}
+{"text": "Lately I've noticed a runny nose and mild sore throat, feels like a common cold.", "label": "self_care"}
+{"text": "I woke up with one side of my face is drooping and my speech is slurred.", "label": "emergency"}
+{"text": "Lately I've noticed a bad headache and I am sensitive to light, but resting in a quiet dark room usually helps.", "label": "self_care"}
+{"text": "Right now I have a seizure that has lasted more than five minutes.", "label": "emergency"}
+{"text": "Lately I've noticed a bad headache and I am sensitive to light, but I get this every month before my period.", "label": "routine"}
+{"text": "I have a dog bit me and broke the skin.", "label": "urgent"}
+{"text": "Right now I have a dog bit me and broke the skin.", "label": "urgent"}
+{"text": "I'm dealing with the worst headache of my life that came on all of a sudden.", "label": "emergency"}
+{"text": "I've been experiencing a rash that's spreading fast with a fever.", "label": "urgent"}
+{"text": "My symptom is slight fatigue after a poor night's sleep.", "label": "self_care"}
+{"text": "I woke up with a small bruise from bumping into a table.", "label": "self_care"}
+{"text": "My symptom is an eye injury after something splashed into it.", "label": "urgent"}
+{"text": "I woke up with mild muscle soreness after a workout yesterday.", "label": "self_care"}
+{"text": "I woke up with I think I'm having a heart attack.", "label": "emergency"}
+{"text": "Right now I have I'm vomiting blood.", "label": "emergency"}
+{"text": "My symptom is mild hiccups that started an hour ago.", "label": "self_care"}
+{"text": "I woke up with an eye injury after something splashed into it.", "label": "urgent"}
+{"text": "Right now I have slight fatigue after a poor night's sleep.", "label": "self_care"}
+{"text": "Lately I've noticed I want to ask about starting a new exercise routine safely.", "label": "routine"}
+{"text": "I'm dealing with I have thoughts of ending my life right now.", "label": "emergency"}
+{"text": "My symptom is a bad headache and I am sensitive to light, but resting in a quiet dark room usually helps.", "label": "self_care"}
+{"text": "My symptom is mild muscle soreness after a workout yesterday.", "label": "self_care"}
+{"text": "For the past hour I've had crushing chest pain radiating to my left arm.", "label": "emergency"}
+{"text": "Lately I've noticed a little bit of dry, itchy skin in winter.", "label": "self_care"}
+{"text": "I woke up with a bad headache and I am sensitive to light, but resting in a quiet dark room usually helps.", "label": "self_care"}
+{"text": "I woke up with a fever of 103 that has lasted three days.", "label": "urgent"}
+{"text": "Lately I've noticed a throbbing headache with nausea and light sensitivity that I get occasionally.", "label": "routine"}
+{"text": "Lately I've noticed chest tightness that started after exercise but isn't severe.", "label": "urgent"}
+{"text": "I have sudden weakness on one side of my body.", "label": "emergency"}
+{"text": "I woke up with my asthma inhaler isn't helping and I'm still wheezing.", "label": "urgent"}
+{"text": "I've been experiencing a small bruise from bumping into a table.", "label": "self_care"}
+{"text": "Right now I have I want to ask about starting a new exercise routine safely.", "label": "routine"}
+{"text": "My symptom is ongoing lower back stiffness after sitting all day.", "label": "routine"}
+{"text": "I woke up with follow-up on my cholesterol test results from last month.", "label": "routine"}
+{"text": "Lately I've noticed severe abdominal pain and I can't stand up straight.", "label": "emergency"}
+{"text": "Right now I have recurring mild headaches a couple times a month.", "label": "routine"}
+{"text": "Lately I've noticed sudden difficulty breathing and I'm gasping for air.", "label": "emergency"}
+{"text": "My symptom is a bad headache and I am sensitive to light, but I get this every month before my period.", "label": "routine"}
+{"text": "I've been experiencing a small skin rash that isn't spreading or itching much.", "label": "routine"}
+{"text": "Right now I have sudden weakness on one side of my body.", "label": "emergency"}
+{"text": "Right now I have I think I'm having a heart attack.", "label": "emergency"}
+{"text": "Right now I have my lips and throat are swelling up and I can barely swallow after eating peanuts.", "label": "emergency"}
+{"text": "Right now I have sudden difficulty breathing and I'm gasping for air.", "label": "emergency"}
+{"text": "I have one side of my face is drooping and my speech is slurred.", "label": "emergency"}
+{"text": "I have a urinary tract infection with fever and back pain.", "label": "urgent"}
+{"text": "I woke up with a throbbing headache with nausea and light sensitivity that I get occasionally.", "label": "routine"}
+{"text": "My symptom is my lips and throat are swelling up and I can barely swallow after eating peanuts.", "label": "emergency"}
+{"text": "Right now I have I want to discuss adjusting my blood pressure medication.", "label": "routine"}
+{"text": "I have a stuffy nose from seasonal pollen.", "label": "self_care"}
+{"text": "My symptom is mild constipation after traveling.", "label": "self_care"}
+{"text": "I've been experiencing mild seasonal allergies that come back every spring.", "label": "routine"}
+{"text": "My symptom is the worst headache of my life that came on all of a sudden.", "label": "emergency"}
+{"text": "I'm dealing with a small paper cut on my finger.", "label": "self_care"}
+{"text": "Right now I have a headache that started after hitting my head hard and I feel drowsy.", "label": "emergency"}
+{"text": "I've been experiencing sudden weakness on one side of my body.", "label": "emergency"}
+{"text": "Lately I've noticed I was in a car accident and my leg looks deformed.", "label": "emergency"}
+{"text": "My symptom is a fever of 103 that has lasted three days.", "label": "urgent"}
+{"text": "For the past hour I've had a small paper cut on my finger.", "label": "self_care"}
+{"text": "My symptom is sudden difficulty breathing and I'm gasping for air.", "label": "emergency"}
+{"text": "I'm dealing with a sudden severe headache along with confusion and blurred vision.", "label": "emergency"}
+{"text": "Right now I have a mole I'd like a doctor to take a look at eventually.", "label": "routine"}

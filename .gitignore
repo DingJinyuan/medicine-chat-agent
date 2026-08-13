@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+logs/
+.fastembed_cache/
+.deepeval/
+
+# Env
+.env
+.env.local
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Finetuning: LoRA adapter itself is small (few MB) and IS committed so the
+# backend can load it without a training step at deploy time. Only exclude
+# bulkier intermediate checkpoints.
+backend/finetuning/checkpoints/
+
+# Data: the MedlinePlus cache (data/medlineplus_topics.json) and the prebuilt
+# FAISS index (data/faiss_index/) ARE committed -- small, deterministic, and
+# avoid a network/embedding-compute dependency at deploy time. Only the
+# runtime sqlite chat-history db is excluded.
+backend/data/*.db
+
+# IDE
+.idea/
+
+# OS
+.DS_Store
+
+# Eval reports (generated)
+backend/evals/last_report.json
+.claude/
