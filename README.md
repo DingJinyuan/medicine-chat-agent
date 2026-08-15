@@ -20,6 +20,12 @@
 
 知识库是 MedlinePlus 的健康主题摘要，通过它的公开 webservices API 抓取（`app/ingestion.py`）。我特意不用常见的医疗 QA 数据集——很多数据集会因版权问题，把所有非美国政府来源的答案正文删掉。MedlinePlus 的内容是政府作品，属于公共领域，版权问题根本不存在。
 
+这条数据管线（`app/ingestion.py` + `app/vector_store.py`）是怎么把「参考书」备好、再被检索到的：
+
+- **抓取**：`ingestion.py` 里有一份 104 个常见健康主题的关键词清单（`DEFAULT_TOPICS`），逐个调 MedlinePlus 的 webservices API，取回每个主题的标题 + 官方摘要（`fetch_medlineplus_topic` 解析返回的 XML，`_strip_html` 清洗 HTML 标签和转义符）。抓完落成 `data/medlineplus_topics.json`，之后启动只读本地缓存，不再重复打 API（`load_or_fetch_corpus`）。
+- **切块**：`build_documents` 用 LangChain 的 `RecursiveCharacterTextSplitter` 把每篇摘要切成 chunk（800 字符、120 重叠，优先按段落/句子边界切，不破坏语义），每个 chunk 的 metadata 带上 `topic` 和 `url`——这是后面回答能引用来源、前端能展示出处链接的基础。
+- **向量化 + 检索**：`vector_store.py` 用 fastembed（而不是更重的 sentence-transformers）把 chunk 转成向量，建 FAISS 索引。`FastEmbedEmbeddings` 是懒加载的 wrapper，模型只在第一次真正做 embedding 时才加载，不拖慢启动；`build_or_load_vector_store` 发现有 `index.faiss` 就直接加载、否则才从 documents 现建，所以换知识库只需删掉索引文件重跑。embedding 模型可以注入（测试里塞个假的 hash embedding，不用真下载 fastembed 模型）；`cache_dir` 也显式放到了 `/tmp` 之外——Render 容器运行时会挂载一个全新的 `/tmp`，会藏掉烘焙进镜像的模型。
+
 ## 微调部分，以及我遇到的一个 bug
 
 `finetuning/train_lora.ipynb` 用 LoRA 把 `distilbert-base-uncased` 微调成一个 4 分类的症状紧急程度分类器——emergency / urgent / routine / self-care。数据集是模板合成的（没有我信得过的现成公开数据集），但训练集和测试集特意用**不相交的句式模板**，所以 held-out 准确率反映的是泛化到新表述的能力，而不是死记模板。
@@ -30,7 +36,7 @@
 # 在带 CUDA torch 的环境（如 conda base-llm）里运行。train 约 10s（GPU），CPU 约 70-85s。
 ```
 
-它在 held-out 集上达到 97.4%，看混淆矩阵，所有错误都落在「谨慎」的方向——没有一个真正的 emergency 被误判成 routine 或 self-care。考虑到这个分类器守的是什么门，这正是你希望错误偏的方向。
+它在 held-out 集上达到 95.1%（305 样本，290 正确），看混淆矩阵，所有错误都落在「谨慎」的方向——没有一个 emergency 被误判成 self-care，仅 1 例被误判成 routine。考虑到这个分类器守的是什么门，这正是你希望错误偏的方向。
 
 这里有个 bug，我觉得比准确率数字更有意思：训练过程中，我输入「I have a bad headache and I am sensitive to light, what could this be?」——典型的偏头痛——分类器却判成了 emergency。原因是我训练数据里，只有 emergency 标签下有这种描述的头痛（"sudden"、"severe"、"with confusion"），其他标签下根本没有同时出现 "headache" 和 "light sensitivity"，所以模型就学到了这个词组合等于最严重类别。我加了几个用同样措辞、但归到 routine 和 self-care 的样本，有效果——那条查询的 emergency 置信度从 0.97 降到 0.84——但在没有任何病史上下文的情况下，它仍然越过 emergency 阈值。我决定把「没有病史的头痛、系统必须猜时，宁可建议去检查」当作一个值得记录的限制，而不是继续追的 bug。同样的症状加上「每个月月经前都会这样」，它就能正确判成 routine。
 
@@ -65,6 +71,10 @@ cd frontend
 npm install
 cp .env.example .env.local   # MEDISENSE_BACKEND_URL + MEDISENSE_API_KEY（须与后端 APP_API_KEY 一致）
 npm run dev                  # http://localhost:3000
+
+# 监控（可选）：Prometheus + Grafana 面板，后端跑起来后另开终端
+cd monitoring
+docker compose up -d         # Grafana http://localhost:3001，Prometheus http://localhost:9090
 ```
 
 ## API
@@ -87,7 +97,7 @@ npm run dev                  # http://localhost:3000
 
 ## 技术栈
 
-Python、FastAPI、LangChain、LangGraph、多厂商 LLM（通过 LLMClient 用 openai/anthropic SDK）、FAISS、fastembed、structlog、Prometheus、Hugging Face transformers + peft（LoRA 微调）、scikit-learn、pytest、Docker、Next.js 16、React 19、Tailwind v4、shadcn/ui，前后端分离（后端 Docker + render.yaml 可部署 Render，前端可部署 Vercel，配置已就绪）。
+Python、FastAPI、LangChain、LangGraph、多厂商 LLM（通过 LLMClient 用 openai/anthropic SDK）、FAISS、fastembed、structlog、Prometheus + Grafana（监控面板）、Hugging Face transformers + peft（LoRA 微调）、scikit-learn、pytest、Docker、Next.js 16、React 19、Tailwind v4、shadcn/ui，前后端分离（后端 Docker + render.yaml 可部署 Render，前端可部署 Vercel，配置已就绪）。
 
 ## 免责声明
 

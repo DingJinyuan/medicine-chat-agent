@@ -1,0 +1,35 @@
+# MediSense AI 监控栈（方案 A：只跑 Prometheus + Grafana，采集宿主机后端）
+# 后端保持本地 uvicorn :8000 运行，Prometheus 通过 host.docker.internal 去抓 /metrics
+# 启动：docker compose up -d
+# 访问：Prometheus http://localhost:9090  |  Grafana http://localhost:3000
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: medisense-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: medisense-grafana
+    ports:
+      - "3001:3000"    # 宿主机 3001，避开前端 Next.js dev 的 3000
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true        # 匿名免登录（demo）
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin      # 匿名用户给 Admin 权限，否则看不了面板
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+volumes:
+  prometheus_data:
+  grafana_data:

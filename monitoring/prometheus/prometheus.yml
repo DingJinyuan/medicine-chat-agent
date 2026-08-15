@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: "medisense"
+    metrics_path: /metrics
+    static_configs:
+      # host.docker.internal = 从容器访问宿主机（Docker Desktop on Windows/Mac 默认支持）
+      # 后端本地跑在 8000 端口，直接抓它的 /metrics
+      - targets: ["host.docker.internal:8000"]

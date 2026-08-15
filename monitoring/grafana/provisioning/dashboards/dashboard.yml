@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: "MediSense"
+    orgId: 1
+    folder: ""
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    options:
+      # 指向 dashboard JSON 所在目录，Grafana 启动时自动加载
+      path: /var/lib/grafana/dashboards

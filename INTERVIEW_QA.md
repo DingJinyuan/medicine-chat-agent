@@ -8,13 +8,13 @@
 
 **医疗信息问答机器人（全栈）** — 设计并实现端到端 RAG 问答系统，包含 LangGraph 编排、LoRA 微调分诊分类器、FAISS 向量检索、多厂商 LLM 适配和医疗安全三层护栏。
 
-**双模型安全架构** — 用 LoRA 微调 distilbert（67M 参数，held-out 97.4%）做紧急分诊，确定性小模型把关安全关键决策，多厂商 LLM 只负责生成；紧急短路让危险输入到不了生成步骤。
+**双模型安全架构** — 用 LoRA 微调 distilbert（67M 参数，held-out 95.1%）做紧急分诊，确定性小模型把关安全关键决策，多厂商 LLM 只负责生成；紧急短路让危险输入到不了生成步骤。
 
 **多厂商 LLM 适配层** — 自研前缀匹配注册表 + 主备降级链 + 可重试错误分类 + 指数退避，统一 DeepSeek/OpenAI/Claude 等 10+ 厂商（含 Claude 协议转换）。
 
 **医疗安全三层防线** — 8 种注入模式扫描 + 检索数据边界包裹 + 输出诊断/剂量重写 + 无条件免责声明；53 项单元测试 + 11 项端到端评估 + DeepEval 生成质量评估。
 
-**全栈可观测工程** — structlog JSON 日志 + request_id 串联、Prometheus 6 项指标（含 token 成本）、统一错误格式、分级健康检查，前后端分离架构（后端 Docker + render.yaml，前端独立部署，配置就绪）。
+**全栈可观测工程** — structlog JSON 日志 + request_id 串联、Prometheus + Grafana 监控面板（6 项指标含 token 成本）、统一错误格式、分级健康检查，前后端分离架构（后端 Docker + render.yaml，前端独立部署，配置就绪）。
 
 ## B. 1 分钟项目介绍
 
@@ -22,7 +22,7 @@
 
 用户输入症状，分类器先判紧急程度：紧急的直接返回急救建议，**大模型根本看不到这条输入**；非紧急的走 RAG 检索 MedlinePlus 医学知识库，再让大模型生成回答，最后过输出安全审查。
 
-我特别设计了**多层降级**——大模型挂了重试切备用模型、分类器坏了退化成保守模式、没把握就走安全兜底。整个系统有 structlog 结构化日志、Prometheus 指标、统一错误处理和健康检查。
+我特别设计了**多层降级**——大模型挂了重试切备用模型、分类器坏了退化成保守模式、没把握就走安全兜底。整个系统有 structlog 结构化日志、Prometheus + Grafana 监控、统一错误处理和健康检查。
 
 前端 React 能跑完整 Demo 流程，配置 DeepSeek Key 就能切真实 AI。"
 
@@ -34,7 +34,7 @@
 
 一个医疗信息问答机器人，覆盖完整的大模型应用技术栈。核心流程：用户输入症状描述 → 先用一个 LoRA 微调的确定性分类器判断紧急程度 → 紧急的走固定急救回复（LLM 根本不看这条输入）→ 非紧急的走 RAG（FAISS 检索医学知识库 + LLM 生成）→ 输出安全审查 → 返回。
 
-技术栈：FastAPI + LangGraph（编排）、FAISS + fastembed（检索）、自研 LLMClient（多厂商）、distilbert + LoRA（分类器）、structlog + Prometheus（可观测）、Next.js 16（前端），后端 Render 前端 Vercel 的部署配置。
+技术栈：FastAPI + LangGraph（编排）、FAISS + fastembed（检索）、自研 LLMClient（多厂商）、distilbert + LoRA（分类器）、structlog + Prometheus + Grafana（可观测）、Next.js 16（前端），后端 Render 前端 Vercel 的部署配置。
 
 一句话亮点：**双模型设计**——把安全关键的「紧急判断」从 LLM 里拆出来，交给一个确定性、防注入的小分类器，而不是让大模型什么都干。这是整个项目最核心的设计思想。
 
@@ -319,7 +319,7 @@ confident-ai 的开源 LLM 评估框架，核心是 **LLM-as-judge**——用 LL
 
 **Q36：生产怎么监控？**
 
-Prometheus `/metrics` 暴露 6 个指标（请求数、延迟、分类分布、LLM 错误、限流、token 用量），接 Grafana 画图。JSON 日志进 ELK/Loki，request_id 能串联一个请求的完整链路。健康检查 `/health` + `/health/ready` 分级。
+三层：① 日志 structlog JSON + request_id 串联（能按 id 拉出一个请求的完整链路）；② 指标 Prometheus 6 项（请求数、延迟、分类分布、LLM 错误、限流、token 用量），`monitoring/` 目录配好了 Prometheus + Grafana，`docker compose up -d` 一键起面板；③ 健康检查 `/health` + `/health/ready` 分级。日志用 JSON 就是为了能接 ELK/Loki，但 demo 阶段还没真正接入。
 
 核心是「出了问题能定位」：请求慢了看延迟指标、LLM 挂了看错误指标、成本异常看 token 指标、具体哪条请求出问题按 request_id 拉日志。
 

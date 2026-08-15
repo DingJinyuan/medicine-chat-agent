@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    # prometheus 是 docker-compose 里 Prometheus 服务的容器名，走容器内网
+    url: http://prometheus:9090
+    isDefault: true
+    editable: false
