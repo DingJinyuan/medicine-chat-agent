@@ -1,6 +1,7 @@
 import json
-import os, logging, time
+import os, time
 import random
+import structlog
 from pathlib import Path
 # OpenAI官方SDK类型，用于标准化返回消息结构（统一OpenAI / Claude输出格式）
 from openai import OpenAI
@@ -14,7 +15,7 @@ from dotenv import load_dotenv
 # 加载 backend/.env（显式路径，避免工作目录不同导致找不到）
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 # 全局日志实例，记录调用耗时、token消耗、模型返回内容
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger("medisense")
 
 # ===================== 模型厂商配置注册表 =====================
 # 前缀匹配规则：通过模型名开头前缀自动识别厂商，自动读取对应环境变量
@@ -110,7 +111,6 @@ def _resolve_model_env(model: str) -> tuple[str, str | None, dict | None]:
     )
 
 # ===================== 异常分类工具 =====================
-
 def _is_retryable_error(error: Exception) -> bool:
     """
     判断异常是否可重试。网络超时、限流、服务端错误 → 可重试。
@@ -221,12 +221,11 @@ class LLMClient:
         for attempt, model in enumerate(models_to_try):
             # 切换模型时重新初始化客户端
             if attempt > 0:
-                logger.warning("[LLM:%s] 主模型失败，切换备用: %s (第 %d/%d 次)",
-                               tag, model, attempt, len(models_to_try) - 1)
+                logger.warning("llm_fallback", tag=tag, model=model, attempt=attempt, total=len(models_to_try) - 1)
                 try:
                     self._init_client(model)
                 except Exception as e:
-                    logger.error("[LLM:%s] 备用模型 %s 初始化失败: %s", tag, model, e)
+                    logger.error("llm_fallback_init_failed", tag=tag, model=model, error=str(e))
                     last_error = e
                     continue
                 self._fallback_used = True
@@ -268,20 +267,17 @@ class LLMClient:
 
                     if not retryable:
                         # 不可重试（认证失败、参数错误、JSON 解析失败等），直接跳到下一个备用模型
-                        logger.error("[LLM:%s] %s 不可重试错误，跳过重试: %s",
-                                     tag, self._current_model, e)
+                        logger.error("llm_non_retryable_error", tag=tag, model=self._current_model, error=str(e))
                         break
 
                     if retry < self.max_retries - 1:
                         # 指数退避 + 随机抖动（封顶 32s），防止重试雪崩
                         base = min(1.0 * (2 ** retry), 32.0)
                         delay = base + random.uniform(0, base * 0.25)
-                        logger.warning("[LLM:%s] %s 调用失败 (重试 %d/%d): %s",
-                                       tag, self._current_model, retry + 1, self.max_retries - 1, e)
+                        logger.warning("llm_retry", tag=tag, model=self._current_model, retry=retry + 1, max_retries=self.max_retries - 1, error=str(e))
                         time.sleep(delay)
                     else:
-                        logger.error("[LLM:%s] %s 重试%d次全部失败: %s",
-                                     tag, self._current_model, self.max_retries, e)
+                        logger.error("llm_all_retries_failed", tag=tag, model=self._current_model, max_retries=self.max_retries, error=str(e))
                         break  # 跳出重试循环，尝试下一个备用模型
 
         raise RuntimeError(
@@ -442,11 +438,11 @@ class LLMClient:
         self.total_completion_tokens += completion_tokens
         self.total_calls += 1
         total = prompt_tokens + completion_tokens
-        label = f"[LLM:{tag}]" if tag else "[LLM]"
         # INFO级别打印耗时、Token总量
         logger.info(
-            "%s 响应: %.1fs, tokens=%d(in:%d+out:%d)",
-            label, elapsed, total, prompt_tokens, completion_tokens,
+            "llm_response",
+            tag=tag, elapsed=elapsed, total_tokens=total,
+            prompt_tokens=prompt_tokens, completion_tokens=completion_tokens,
         )
         # DEBUG级别打印前500字符模型返回内容，方便调试
-        logger.debug("%s 输出: %.500s", label, msg.content)
+        logger.debug("llm_output", tag=tag, content=str(msg.content)[:500])
