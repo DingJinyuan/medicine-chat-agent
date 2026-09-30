@@ -1,5 +1,6 @@
 "use client";
 
+import type { ComponentType } from "react";
 import { motion } from "framer-motion";
 import { Stethoscope } from "lucide-react";
 
@@ -10,7 +11,11 @@ const dotTransition = (delay: number) => ({
   delay,
 });
 
-export function ThinkingIndicator() {
+export function ThinkingIndicator({
+  icon: Icon = Stethoscope,
+}: {
+  icon?: ComponentType<{ className?: string }>;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -19,7 +24,7 @@ export function ThinkingIndicator() {
       className="flex items-center gap-3 pl-11"
     >
       <div className="flex items-center gap-2 rounded-2xl border bg-card px-3.5 py-2.5">
-        <Stethoscope className="h-3.5 w-3.5 text-primary" />
+        <Icon className="h-3.5 w-3.5 text-primary" />
         <div className="flex items-center gap-1">
           {[0, 0.15, 0.3].map((delay) => (
             <motion.span

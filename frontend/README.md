@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend
 
-## Getting Started
+MediSense / Clinical AI 的前端：Next.js 16 (App Router) + TypeScript + Tailwind + shadcn/ui + framer-motion。
 
-First, run the development server:
+## 路由
+
+| 路径 | 说明 |
+|---|---|
+| `/` | 首页选择界面（专家版 / 患者版两个入口） |
+| `/patient` | 患者版 MediSense（分诊安全问答） |
+| `/expert` | 专家版 Clinical AI（多 Agent 临床 RAG + 事实核查） |
+| `/api/chat` | 代理转发到后端 `/api/chat` |
+
+## 开发
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install   # 下载依赖（node_modules）
+npm run dev   # 启动 http://localhost:3000
+npm run build # 生产构建
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 环境变量（`.env.local`）
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+MEDISENSE_BACKEND_URL=http://localhost:8000   # 后端地址
+MEDISENSE_API_KEY=medisense-secret-2026       # 必须 = 后端 .env 的 APP_API_KEY
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`MEDISENSE_API_KEY` 与后端 `.env` 的 `APP_API_KEY` 不一致时，`/api/chat` 会返回 401。

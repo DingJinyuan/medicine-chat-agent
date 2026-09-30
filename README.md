@@ -1,104 +1,147 @@
-# MediSense AI
+# Medicine AI Pro
 
-> 📖 **文档导航**：[README](README.md)（项目概览）· [功能说明](FEATURES.md)（技术细节）· [面试 QA](INTERVIEW_QA.md)
+医学 AI 项目，包含**两套面向不同用户的工作流**，共享同一套技术底座和数据库（PostgreSQL + pgvector）。
 
-一个医疗信息问答机器人，用一个项目覆盖完整的应用型 AI 技术栈：RAG、用 LangGraph 编排的 LLM、一个 LoRA 微调的分类器（不只是 prompt）、单元测试、真实调用模型的评估、医疗安全护栏，以及前后端分离的部署。
-
-先说免责声明，因为这个领域需要：**这是一个作品集项目，不是真正的临床工具。** 它不会给你诊断或药物剂量，每个回答末尾都会附一句指引你去找真正的医生或急救服务。
-
-## 为什么用 LangGraph
-
-做一个聊天循环最直接的方式，是把整个 agent 循环手写成一个函数，里面塞一堆 if。我想要的是请求流真正变成一个「图」，有一个有意义的条件分支：
-
-![image-20260813184353834](images/image-20260813184353834.png)
-
-当分诊分类器以足够的置信度判为「emergency」时，图会**完全跳过检索和生成**，直接返回一个固定的安全回复——LLM 根本看不到这条输入。这是 `app/graph.py` 里真正的分支，不是埋在 handler 深处三层 if 里的、评审时没人会注意到的逻辑。
+| | 专家版（医生） | 患者版（普通人） |
+|---|---|---|
+| 定位 | 临床决策支持 | 健康信息助手（MediSense） |
+| 工作流 | 多 Agent RAG + ML 风险预测 | 分诊 → 安全问答 |
+| 数据源 | PubMed 摘要 + 临床指南 PDF | MedlinePlus 健康主题 |
+| 特色 | 文献引用、事实核查、再入院风险 | 紧急分诊短路、医疗安全护栏 |
 
 ## 架构
 
-![image-20260813184804422](images/image-20260813184804422.png)
-
-知识库是 MedlinePlus 的健康主题摘要，通过它的公开 webservices API 抓取（`app/ingestion.py`）。我特意不用常见的医疗 QA 数据集——很多数据集会因版权问题，把所有非美国政府来源的答案正文删掉。MedlinePlus 的内容是政府作品，属于公共领域，版权问题根本不存在。
-
-这条数据管线（`app/ingestion.py` + `app/vector_store.py`）是怎么把「参考书」备好、再被检索到的：
-
-- **抓取**：`ingestion.py` 里有一份 104 个常见健康主题的关键词清单（`DEFAULT_TOPICS`），逐个调 MedlinePlus 的 webservices API，取回每个主题的标题 + 官方摘要（`fetch_medlineplus_topic` 解析返回的 XML，`_strip_html` 清洗 HTML 标签和转义符）。抓完落成 `data/medlineplus_topics.json`，之后启动只读本地缓存，不再重复打 API（`load_or_fetch_corpus`）。
-- **切块**：`build_documents` 用 LangChain 的 `RecursiveCharacterTextSplitter` 把每篇摘要切成 chunk（800 字符、120 重叠，优先按段落/句子边界切，不破坏语义），每个 chunk 的 metadata 带上 `topic` 和 `url`——这是后面回答能引用来源、前端能展示出处链接的基础。
-- **向量化 + 检索**：`vector_store.py` 用 fastembed（而不是更重的 sentence-transformers）把 chunk 转成向量，建 FAISS 索引。`FastEmbedEmbeddings` 是懒加载的 wrapper，模型只在第一次真正做 embedding 时才加载，不拖慢启动；`build_or_load_vector_store` 发现有 `index.faiss` 就直接加载、否则才从 documents 现建，所以换知识库只需删掉索引文件重跑。embedding 模型可以注入（测试里塞个假的 hash embedding，不用真下载 fastembed 模型）；`cache_dir` 也显式放到了 `/tmp` 之外——Render 容器运行时会挂载一个全新的 `/tmp`，会藏掉烘焙进镜像的模型。
-
-## 微调部分，以及我遇到的一个 bug
-
-`finetuning/train_lora.ipynb` 用 LoRA 把 `distilbert-base-uncased` 微调成一个 4 分类的症状紧急程度分类器——emergency / urgent / routine / self-care。数据集是模板合成的（没有我信得过的现成公开数据集），但训练集和测试集特意用**不相交的句式模板**，所以 held-out 准确率反映的是泛化到新表述的能力，而不是死记模板。
-
-```bash
-# 微调是 Jupyter notebook 工作流（finetuning/*.ipynb）：
-#   prepare_dataset.ipynb → train_lora.ipynb → evaluate.ipynb
-# 在带 CUDA torch 的环境（如 conda base-llm）里运行。train 约 10s（GPU），CPU 约 70-85s。
+**专家版**（`expert_pipeline.py`，线性）：
 ```
-
-它在 held-out 集上达到 95.1%（305 样本，290 正确），看混淆矩阵，所有错误都落在「谨慎」的方向——没有一个 emergency 被误判成 self-care，仅 1 例被误判成 routine。考虑到这个分类器守的是什么门，这正是你希望错误偏的方向。
-
-这里有个 bug，我觉得比准确率数字更有意思：训练过程中，我输入「I have a bad headache and I am sensitive to light, what could this be?」——典型的偏头痛——分类器却判成了 emergency。原因是我训练数据里，只有 emergency 标签下有这种描述的头痛（"sudden"、"severe"、"with confusion"），其他标签下根本没有同时出现 "headache" 和 "light sensitivity"，所以模型就学到了这个词组合等于最严重类别。我加了几个用同样措辞、但归到 routine 和 self-care 的样本，有效果——那条查询的 emergency 置信度从 0.97 降到 0.84——但在没有任何病史上下文的情况下，它仍然越过 emergency 阈值。我决定把「没有病史的头痛、系统必须猜时，宁可建议去检查」当作一个值得记录的限制，而不是继续追的 bug。同样的症状加上「每个月月经前都会这样」，它就能正确判成 routine。
-
-## 安全
-
-`/api/chat` 有 API key 认证 + 每 IP 速率限制。检索到的内容会先扫描 prompt 注入模式，并用「这是数据、不是指令」的显式标记包起来，然后才进入 LLM prompt。除此之外，针对医疗机器人的护栏：正则会捕获并改写确定性的诊断用语（"you have diabetes"）和具体药物剂量（"500mg every 6 hours"），而且免责声明会追加到**每一个**回答，不管模型说了什么，不只是看起来有风险的。结合紧急短路，真正危险的输入根本到不了生成这一步。CORS 锁定到部署的前端域名，后端的 API key 只存在于 Next.js 的 server route 里——永远不会进浏览器。聊天历史存 SQLite，仅为演示连续性，不涉及真实患者数据。
-
-## 测试 vs 评估
-
-`pytest`（53 个测试，全部离线，LLM 调用被 mock）检查的是代码：护栏正则行为、速率限制数学、ingestion 的 XML 解析、LangGraph 两条路由分支、认证。写这些测试实际上抓到了两个护栏正则的真实 bug——一个诊断模式的字符类没包含数字，导致漏掉 "type 2 diabetes"；另一个要求 "have" 和病名之间有填充词，导致 "you have diabetes for sure" 被放过了。
-
-`evals/run_evals.py` 是另一回事——它检查整个系统，真实调用多厂商 LLM 和真实训练好的分类器，跑 11 个用例：回答是否真的用到了检索到的事实，是否避免泄露剂量或诊断，是否把胸痛、中风症状、自残语言路由到急救响应，藏在检索 chunk 里的 prompt 注入是否被捕获并忽略。目前 11/11 通过。
-
-```bash
-pytest                    # backend/，完全离线
-python -m evals.run_evals # backend/，需要真实的 LLM key（LLM_MODEL_ID + 厂商 key）
+query_understanding → retrieval → reasoning → critique → END
 ```
+- 检索：多路召回（改写问题/关键词）→ BM25(ParadeDB) + cosine(pgvector) → RRF → cross-encoder 精排
+- reasoning：检索上下文 + ML 风险 → LLM 生成带引用回答
 
-## 本地运行
+**患者版**（`patient_pipeline.py`，条件分支）：
+```
+classify_triage ──紧急/低置信──> emergency_shortcut ──> output_guardrail
+              └──正常────────> retrieve → generate ─> output_guardrail
+```
+- 分诊：LoRA 微调分类器判断 emergency/routine
+- 检索：BM25 + cosine → RRF（无精排）
+- 护栏：禁止诊断/剂量 + 强制免责声明 + 注入扫描
+
+## 快速开始
 
 ```bash
-# 后端
-cd backend
-python3 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+# 1. 创建虚拟环境
+python -m venv .venv
+
+# 2. 激活（Windows）
+.venv\Scripts\activate
+# 或 Git Bash
+source .venv/Scripts/activate
+
+# 3. 安装依赖（首次下载 torch + 模型，较慢）
 pip install -r requirements.txt
-cp .env.example .env   # 填 LLM_MODEL_ID + 厂商 key（如 DEEPSEEK_API_KEY）
-pytest
-uvicorn app.main:app --reload   # http://localhost:8000
 
-# 前端，另开一个终端
-cd frontend
-npm install
-cp .env.example .env.local   # MEDISENSE_BACKEND_URL + MEDISENSE_API_KEY（须与后端 APP_API_KEY 一致）
-npm run dev                  # http://localhost:3000
+# 4. 配置环境变量：backend/.env
+#    必填 database_url；llm_model_id 走 MODEL_PROFILES 多厂商（配对应厂商的 API key）
 
-# 监控（可选）：Prometheus + Grafana 面板，后端跑起来后另开终端
-cd monitoring
-docker compose up -d         # Grafana http://localhost:3001，Prometheus http://localhost:9090
+# 5. 初始化数据库（建表 + pgvector 扩展 + BM25 索引）
+cd backend
+python -c "from src.database.connection import init_db; init_db()"
+
+# 6. 导入患者版知识库（MedlinePlus → chunks 表，source='medlineplus'）
+python -m src.ingestion.patient_ingest
+
+# 7. 跑专家版流水线（当前无 CLI，直接调函数）
+python -c "from src.agents.expert_pipeline import run_pipeline; print(run_pipeline('你的临床问题'))"
 ```
 
-## API
+> 说明：代码包根是 `backend/`，所有脚本需在 `backend/` 下运行（`from src.xxx` 才能解析）。患者版 `build_pipeline` 的 main 入口尚未写，需自行创建依赖（`LLMClient`、`Embedder`、`TriageClassifier`）后调用。
 
-- `POST /api/chat` `{message, session_id?}` —— 跑 LangGraph 流水线，API key 认证 + 每 IP 限流
-- `GET /api/chat/{session_id}/history`
-- `GET /health` —— 存活检查
-- `GET /health/ready` —— 就绪检查（分类器、向量库、LLM 配置）
-- `GET /metrics` —— Prometheus 指标
+## 前端
 
-## 部署
+前端是 Next.js 16（App Router）+ TypeScript + Tailwind + shadcn/ui。入口是首页选择界面 `/`，点选进入专家版 `/expert` 或患者版 `/patient`。
 
-后端在 Render（Docker），前端在 Vercel。
+```bash
+cd frontend
+npm install   # 下载前端依赖（node_modules）
+npm run dev   # 启动开发服务器 http://localhost:3000
+```
 
-1. 推送到 GitHub。
-2. Render → New → Blueprint，连接仓库。根目录的 `render.yaml` 指向 `backend/`。在面板里设 `LLM_MODEL_ID` + 厂商 key（如 `DEEPSEEK_API_KEY`）、`APP_API_KEY`、`CORS_ORIGINS`。
-3. Vercel → New Project，导入仓库，根目录设 `frontend`。设 `MEDISENSE_BACKEND_URL`（Render 的 URL）和 `MEDISENSE_API_KEY`（匹配 `APP_API_KEY`）。
+前端 `src/app/api/chat/route.ts` 作为代理转发到后端 `/api/chat`（server-only 环境变量，API key 不暴露给浏览器）。在 `frontend/.env.local` 配置：
 
-有一点值得诚实说明：后端镜像带着 torch 和 transformers（给分诊分类器用），对 Render 免费层的 512MB 来说是一大块内存。真实负载下如果 OOM，升到付费 Starter 层是直接的解法。
+```bash
+MEDISENSE_BACKEND_URL=http://localhost:8000   # 后端地址
+MEDISENSE_API_KEY=medisense-secret-2026       # 必须 = 后端 .env 的 APP_API_KEY
+```
 
-## 技术栈
+> 后端 `.env` 的 `APP_API_KEY` 必须与前端 `MEDISENSE_API_KEY` 一致，否则 `/api/chat` 返回 401。
 
-Python、FastAPI、LangChain、LangGraph、多厂商 LLM（通过 LLMClient 用 openai/anthropic SDK）、FAISS、fastembed、structlog、Prometheus + Grafana（监控面板）、Hugging Face transformers + peft（LoRA 微调）、scikit-learn、pytest、Docker、Next.js 16、React 19、Tailwind v4、shadcn/ui，前后端分离（后端 Docker + render.yaml 可部署 Render，前端可部署 Vercel，配置已就绪）。
+## 测试
 
-## 免责声明
+```bash
+cd backend
+python tests/test_boundary.py        # 边界值/等价类测试（纯函数，无外部依赖）
+python tests/test_pipeline_build.py  # 两版 pipeline 构建 + 控制流（mock 依赖）
+python tests/test_e2e.py             # 端到端真实 query（需 LLM key + 本地模型 + 数据库有数据）
+```
 
-MediSense AI 是演示项目，不是有执照的医疗设备。它不提供医疗建议，也不该用于真实的临床决策。如果你正经历医疗紧急情况，请拨打当地急救电话。
+## 怎么提问最符合
+
+> ⚠️ **提问请用英文**：患者画像提取和患者版分诊分类器只支持英文，中文会导致画像提取为空、分诊误判。
+
+### 专家版（医生）
+
+系统会自动补全含糊问题，但**信息越完整结果越准**：
+
+- **说具体药名/病名**：`metformin` 比 `降糖药` 准，`heart failure` 比 `心脏病` 准。
+- **风险预测要提供患者画像**（缺失用默认值兜底，但默认值 = 猜测）：
+
+| 信息 | 示例 |
+|---|---|
+| 年龄 | `72岁` |
+| 性别 | `男` / `女` |
+| 是否急诊 | `急诊入院` |
+| 住院天数 | `住院 5 天` |
+| 共病史（7 类） | 糖尿病 / 心衰 / 高血压 / 肾病 / 肺炎 / 败血症 / 慢阻肺 |
+
+示例：`72 岁男性，有心衰和糖尿病，急诊入院 5 天，metformin 还安全吗`
+
+### 患者版（普通人）
+
+分诊分类器会先判断紧不紧急，**描述症状要具体**：
+
+- 说清**症状和部位**：`胸口闷痛、呼吸急促` 比 `不舒服` 更容易被正确分诊
+- 紧急症状（胸痛、呼吸困难、中风迹象、大出血）会被自动识别并引导就医
+
+## 数据准备
+
+- **专家版知识库**：临床指南 PDF 放 `data/guidelines/`，PubMed 摘要用 `ingestion/expert_ingest.py`（`ExpertIngestionPipeline.run()`）抓取并入库——`DEFAULT_QUERIES` 预定义 8 个主题，覆盖范围限于这 8 个。
+- **患者版知识库**：`data/medlineplus_topics.json`（104 条），跑 `python -m src.ingestion.patient_ingest` 导入。
+- **MIMIC 数据**：`data/mimic/*.csv`，供 `risk_modeling/expert_risk_model.py` 训练再入院风险模型。
+- **BM25 检索**：需 ParadeDB `pg_search`（Docker 镜像 `paradedb/paradedb`）；未部署时自动降级为纯向量检索。
+
+## 需要下载的模型与依赖
+
+### HuggingFace 模型（运行时自动下载，需联网）
+
+| 模型 | 用途 | 体积参考 |
+|---|---|---|
+| `NeuML/pubmedbert-base-embeddings` | 嵌入（两版共用，768 维） | ~450MB |
+| `BAAI/bge-reranker-base` | 精排（仅专家版） | ~1.1GB |
+| `distilbert-base-uncased` | 分诊基座（患者版） | ~260MB |
+
+首次运行会从 HuggingFace 拉取，可用 `HF_HOME` 指定缓存目录（默认 `~/.cache/huggingface`）。
+
+### 本地模型文件（训练产物，非下载）
+
+需先训练生成（或在仓库中已存在），否则对应节点会降级/报错：
+
+| 路径 | 用途 |
+|---|---|
+| `backend/patient_finetuning/artifacts/triage-lora/` | 患者版分诊 LoRA + `label_map.json` |
+| `backend/expert_finetuning/medical_lora_adapter` | 专家版 reasoning LoRA（可选，仅 GPU） |
+| `backend/risk_modeling/readmission_model.json` | 再入院风险模型（XGBoost） |
+
+### 数据库
+
+PostgreSQL + pgvector + ParadeDB（BM25），Docker 镜像 `paradedb/paradedb`；未部署 ParadeDB 时 BM25 自动降级为纯向量检索。

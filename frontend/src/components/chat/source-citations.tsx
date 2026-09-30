@@ -32,6 +32,7 @@ export function SourceCitations({ sources }: { sources: SourceChunk[] }) {
           >
             <button
               onClick={() => setExpanded(isOpen ? null : source.topic)}
+              aria-expanded={isOpen}
               className="inline-flex items-center gap-1"
             >
               <Badge

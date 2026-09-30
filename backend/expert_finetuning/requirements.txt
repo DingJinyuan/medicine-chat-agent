@@ -1,0 +1,54 @@
+# ============================================================
+# Medical Fine-Tuning with Unsloth + QLoRA
+# requirements.txt
+#
+# These are the exact packages installed by Cell 2 of the
+# notebook (Medical_FineTuning_QLoRA_Unsloth.ipynb).
+# You do NOT pip install this file manually — the notebook
+# Cell 2 handles all installation automatically in Colab.
+# This file is for reference / documentation only.
+# ============================================================
+
+# ── Core Unsloth ────────────────────────────────────────────
+# Installed with --no-deps so it doesn't conflict with Colab's
+# pre-installed torch. unsloth_zoo is a required sub-dependency
+# that must be installed separately (see note below).
+unsloth @ git+https://github.com/unslothai/unsloth.git
+unsloth_zoo                        # required by unsloth internals
+
+# ── HuggingFace ecosystem ───────────────────────────────────
+transformers>=4.45.0
+datasets>=2.18.0
+peft>=0.13.0
+trl>=0.12.0                        # provides SFTTrainer + SFTConfig
+accelerate>=0.34.0
+huggingface_hub>=0.22.0
+
+# ── Quantisation ────────────────────────────────────────────
+bitsandbytes>=0.44.0               # 4-bit NF4 + 8-bit AdamW
+
+# ── Attention / kernels ─────────────────────────────────────
+xformers                           # memory-efficient attention
+
+# ── Tokenisation ────────────────────────────────────────────
+sentencepiece>=0.2.0
+protobuf>=3.20.0
+
+# ── Data / scientific stack ─────────────────────────────────
+numpy>=1.26.0
+matplotlib>=3.8.0                  # loss curve plotting
+
+# ── System monitoring ───────────────────────────────────────
+psutil>=5.9.0                      # RAM monitoring
+
+# ============================================================
+# NOTE — unsloth_zoo
+# ============================================================
+# unsloth_zoo is an internal dependency of Unsloth that is NOT
+# automatically pulled in when Unsloth is installed with
+# --no-deps. If Cell 3 fails with:
+#   ModuleNotFoundError: No module named 'unsloth_zoo'
+# run this in a new cell BEFORE Cell 3:
+#   !pip install unsloth_zoo
+# then re-run from Cell 3.
+# ============================================================

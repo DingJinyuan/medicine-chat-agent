@@ -1,0 +1,68 @@
+# Core config
+python-dotenv==1.0.1
+pydantic==2.13.5
+pydantic-settings==2.15.0
+
+# Database
+sqlalchemy==2.0.52
+psycopg2-binary==2.9.12
+pgvector==0.5.0
+
+# Embeddings / ML
+sentence-transformers==6.0.1
+transformers==5.16.1
+huggingface-hub==1.30.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.14.0+cpu
+
+# Local LoRA model inference（专家版 reasoning 用微调模型）
+# 注：bitsandbytes 仅支持 CUDA/Linux，Windows+CPU 下无法安装且用不到（reasoning 已降级走 API），故移除
+peft==0.20.0
+accelerate==1.14.0
+
+# Ingestion
+requests==2.32.4
+pymupdf==1.28.2
+numpy==2.5.3
+pandas==3.0.5
+tiktoken==0.14.0
+
+# Caching
+redis==5.0.1
+
+# Utilities
+structlog==26.1.0
+tqdm==4.70.0
+prometheus_client==0.26.0
+httpx==0.28.1
+
+# Agents
+langgraph==1.2.11
+langchain==1.4.0
+openai==2.54.0
+anthropic==1.4.0
+
+# Evaluation
+# 注：ragas 0.4.x 依赖旧版 langchain，与 langchain 1.x 冲突，且评估库后端主流程用不到，故移除
+langsmith==0.12.2
+datasets==5.0.1
+langchain-openai==1.6.1
+deepeval    # LLM-as-judge + 医学 G-Eval 断言（评估层 ②）
+lm-eval     # harness + benchmark（PubMedQA，评估层 ③）
+
+# Testing
+pytest==9.1.1
+
+# ML Risk Module
+xgboost==3.4.1
+scikit-learn==1.9.0
+mlflow==3.16.0
+shap==0.52.0
+
+# API
+uvicorn[standard]==0.52.4
+fastapi==0.141.1
+
+# Dashboard
+streamlit==1.63.0
+plotly==7.0.0

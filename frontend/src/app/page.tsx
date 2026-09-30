@@ -1,5 +1,5 @@
-import { ChatPanel } from "@/components/chat/chat-panel";
+import { ModeSelect } from "@/components/home/mode-select";
 
 export default function Home() {
-  return <ChatPanel />;
+  return <ModeSelect />;
 }

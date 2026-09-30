@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { Activity, Brain, Sparkles, Sun } from "lucide-react";
+import { staggerContainer as container, staggerItem as item } from "@/lib/motion";
 
 const EXAMPLE_PROMPTS = [
   { text: "What are common symptoms of type 2 diabetes?", icon: Activity },
@@ -9,16 +10,6 @@ const EXAMPLE_PROMPTS = [
   { text: "How is seasonal allergy different from a cold?", icon: Sparkles },
   { text: "What should I do about a mild sunburn?", icon: Sun },
 ];
-
-const container: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
-};
-
-const item: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-};
 
 export function EmptyState({ onSelectPrompt }: { onSelectPrompt: (prompt: string) => void }) {
   return (

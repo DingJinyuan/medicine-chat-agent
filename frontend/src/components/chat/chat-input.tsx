@@ -58,6 +58,7 @@ export function ChatInput({ value, onChange, onSubmit, disabled }: ChatInputProp
         />
         <motion.button
           type="button"
+          aria-label="Send message"
           disabled={!canSend}
           onClick={onSubmit}
           whileHover={canSend ? { scale: 1.06 } : undefined}

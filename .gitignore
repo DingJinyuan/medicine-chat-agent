@@ -4,9 +4,10 @@ __pycache__/
 .venv/
 *.egg-info/
 .pytest_cache/
-logs/
-.fastembed_cache/
+.coverage
 .deepeval/
+.fastembed_cache/
+logs/
 
 # Env
 .env
@@ -17,16 +18,24 @@ frontend/node_modules/
 frontend/.next/
 frontend/out/
 
-# Finetuning: LoRA adapter itself is small (few MB) and IS committed so the
-# backend can load it without a training step at deploy time. Only exclude
-# bulkier intermediate checkpoints.
-backend/finetuning/checkpoints/
+# Finetuning: LoRA adapter 本身小（几 MB），提交以便部署时免训练加载；只排除较大的中间 checkpoint
+backend/expert_finetuning/checkpoints/
+backend/patient_finetuning/checkpoints/
 
-# Data: the MedlinePlus cache (data/medlineplus_topics.json) and the prebuilt
-# FAISS index (data/faiss_index/) ARE committed -- small, deterministic, and
-# avoid a network/embedding-compute dependency at deploy time. Only the
-# runtime sqlite chat-history db is excluded.
+# Data: medlineplus_topics.json 提交（小、确定、免部署联网）；排除运行时 db
 backend/data/*.db
+backend/data/db/
+backend/risk_modeling/mlflow.db
+
+# Eval 报告（生成物）
+backend/evaluation/last_report.json
+backend/evaluation/last_deepeval_report.json
+
+# 临时/无关文件
+backend/_test_reasoning_load.py
+.tmp-cps/
+requirements.txt.cpu.bak
+main.py
 
 # IDE
 .idea/
@@ -34,6 +43,4 @@ backend/data/*.db
 # OS
 .DS_Store
 
-# Eval reports (generated)
-backend/evals/last_report.json
 .claude/

@@ -2,87 +2,123 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 项目是什么
+## 项目概览
 
-MediSense AI 是一个医疗信息 RAG 问答机器人，定位是**作品集 demo（明确不是临床工具）**。它把 LangGraph 编排的 RAG 流水线（多厂商 LLM + FAISS 检索）和一个 LoRA 微调的分诊分类器组合在一起。知识库是 MedlinePlus 健康主题摘要（美国政府的公共领域内容），通过其 webservices API 抓取。
+医学 AI 项目，包含**两套面向不同用户的工作流**，共享同一套技术底座（`common/`）和数据库（pgvector）：
 
-## 架构
+1. **专家版（`expert_*`，给医生）**：多 Agent 临床 RAG（`query_understanding → retrieval → reasoning → critique`）+ 30 天再入院 ML 风险预测。数据源 PubMed 摘要 + 临床指南 PDF。
+2. **患者版（`patient_*`，给普通人，MediSense）**：分诊安全问答（`classify_triage → 条件路由 → 应急短路/RAG → 输出护栏`），LoRA 分诊分类器 + 医疗安全护栏。数据源 MedlinePlus 健康主题。
+
+本仓库不是 git 仓库。统一入口是 `backend/src/main.py`（FastAPI，`/api/chat` 按 `mode` 路由到专家版/患者版）。根目录 `main.py` 是 PyCharm 默认模板，与项目无关。
+
+## 架构总览
+
+### 目录结构（`backend/`）
 
 ```
-Next.js 前端 (Vercel)              FastAPI 后端 (Render, Docker)
-  聊天 UI + server route ──X-API-Key──▶  LangGraph 流水线 (app/graph.py)
-                                         classify_triage ─▶ emergency_shortcut ─▶ output_guardrail ─▶ END
-                                                      \──▶ retrieve ─▶ generate ─▶ output_guardrail ─▶ END
+backend/
+├── src/                    运行时代码
+│   ├── agents/             expert_* / patient_* 工作流节点 + build_pipeline
+│   ├── service/            expert_* / patient_* 业务逻辑
+│   ├── schemas/            chat_schemas.py（两版对话 Pydantic 模型：公共基类 + 专家/患者子类）
+│   ├── common/             llm_adapter / logging_config / errors（两版共享）
+│   ├── repository/         chunk_repo / chat_repo（数据访问）
+│   ├── database/           models / connection（ORM + 引擎）
+│   ├── ingestion/          数据摄取（pdf_parser / pubmed_fetcher / chunker / embedder / expert_ingest / patient_ingest）
+│   ├── ml/                 推理模型（expert_risk_tool / patient_triage_classifier）
+│   └── config.py           统一配置
+├── risk_modeling/          专家版训练（expert_risk_model_training.ipynb，自包含 notebook）
+├── expert_finetuning/      专家版微调（ai_medical_assistant_fine-tuning.ipynb）
+├── patient_finetuning/     患者版微调（train_lora.ipynb 等）
+├── tests/                  pytest 测试（15 文件,132 用例,覆盖率 80%）
+├── evaluation/             评估脚本（run_evals / deepeval_eval / retrieval_eval / ir_metrics / benchmark）
+└── data/                   数据（mimic / medlineplus_topics.json / patient_eval / eval / db）
 ```
 
-请求流是一个真正的 LangGraph 状态机（`app/graph.py`），不是顺序调用的 handler。当分诊分类器以 ≥0.6 的置信度判为 `emergency` 时，检索和生成被**完全跳过**，直接返回固定安全回复——LLM 根本看不到这条输入。
+`src` 是 Python 包，所有导入形如 `from src.config import settings`，**任何脚本必须在 `backend/` 目录下运行**。
 
-**两个模型，两种职责。** 本地 LoRA 分类器（`app/triage_classifier.py`）是确定性的、快的、不受 prompt 注入影响——它负责把关紧急判断。多厂商 LLM（`app/llm_client.py` 走 `app/llm_adapter.py` 的 LLMClient）只负责生成。要守住这个分离：分类器才是安全关键的那一环。
+### 两套工作流
 
-**三层防线**（`app/security.py`），对**每一条**响应路径都生效：
-1. 输入侧——对检索到的 chunk 做 prompt 注入正则扫描
-2. 检索侧——`wrap_untrusted()` 把检索文本用「这是数据不是指令」的方式包起来
-3. 输出侧——`enforce_medical_guardrails()` 重写确定性诊断和具体剂量的措辞，并强制追加免责声明（连 emergency 短路路径也会跑这一步）
-
-**训练与推理解耦。** `finetuning/` 只产出模型**文件**（权重在 `finetuning/artifacts/triage-lora/`）。运行中的后端只通过 `app/triage_classifier.py` 加载这些文件。重训或改分类器完全不用碰运行时代码——两者只通过 artifact 目录衔接。
-
-**横切关注点**（企业级加固）：
-- **统一错误格式**（`app/errors.py`）：所有错误返回 `{"error":{"code","message"}}`，错误码用 `ErrorCode` 枚举
-- **可观测性**：structlog JSON 日志（`app/logging_config.py`，含 request_id 中间件）+ Prometheus 指标（`app/metrics.py`，`/metrics` 端点）
-- **认证**：`/api/chat` 用 `Depends(require_api_key)` 验证 `X-API-Key`（前后端 key 需一致：后端 `APP_API_KEY` = 前端 `MEDISENSE_API_KEY`）
-- **健康检查**：`/health`（存活）+ `/health/ready`（就绪，检查分类器/向量库/LLM 配置）
-- **分类器兜底**：加载失败退化为 `ConservativeClassifier`（全当 emergency）；分类置信度 < 0.4 走保守路由
-
-## 常用命令
-
-### 后端（`backend/`）
-
-```bash
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env                                # 填入 LLM_MODEL_ID + 厂商 key（如 DEEPSEEK_API_KEY）
-uvicorn app.main:app --reload                       # http://localhost:8000
+**专家版**（`expert_pipeline.py`，线性）：
+```
+query_understanding → retrieval → reasoning → critique → END
 ```
 
-注意：`requirements.txt` 把 torch 锁在 CPU wheel（`--extra-index-url .../whl/cpu`）。GPU 训练要用独立环境（比如带 CUDA torch 的 conda 环境）；运行后端本身不需要 CUDA。
-
-### 测试 vs 评估（两码事）
-
-- **`pytest`** —— 53 个离线单元测试，LLM 调用被 mock。检查的是代码路径：guardrail 正则、速率限制、ingestion 的 XML 解析、LangGraph 路由、认证。在 `backend/` 下运行。
-- **`python -m evals.run_evals`** —— 端到端评估，调用**真实**多厂商 LLM 和**真实**训练好的分类器，跑 11 个 golden 用例（`evals/golden_dataset.json`）。需要有效的 LLM key（`LLM_MODEL_ID` + 厂商 key）。改了 system prompt、切块、检索或分诊模型后要跑。
-
-```bash
-pytest                               # 全部测试
-pytest tests/test_security.py        # 单个文件
-pytest -k "rate_limit"               # 按关键字
-python -m evals.run_evals            # 需要 LLM key
+**患者版**（`patient_pipeline.py`，条件分支）：
+```
+classify_triage ──紧急/低置信──> emergency_shortcut ──> output_guardrail
+              └──正常────────> retrieve → generate ─> output_guardrail
 ```
 
-### 微调（`backend/`）
+### 数据摄取 pipeline（离线建库）
 
-```bash
-# 微调脚本是 Jupyter notebook（finetuning/ 下三个 .ipynb），
-# 在带 CUDA torch 的环境（conda base-llm）里按顺序跑：
-#   prepare_dataset.ipynb → train_lora.ipynb → evaluate.ipynb
-```
+- **专家版**：`ingestion/expert_ingest.py` 的 `ExpertIngestionPipeline`（`run_pubmed` + `run_pdf` + `run`），PubMed 摘要 / PDF 指南 → chunker → embedder → pgvector。`run_pubmed` 按 `DEFAULT_QUERIES`（预定义 8 个医学主题）离线预抓 PubMed 摘要入库，**覆盖范围限于这几个主题**。
+- **患者版**：`ingestion/patient_ingest.py`（`python -m src.ingestion.patient_ingest`），medlineplus_topics.json → chunker → embedder → pgvector。
 
-数据集是模板合成的；训练集和测试集用**不相交的句式模板**，所以 held-out 准确率反映的是泛化而非死记硬背。标签是 `emergency` / `urgent` / `routine` / `self_care`（id2label 顺序很重要——它存到 `finetuning/artifacts/triage-lora/label_map.json`，运行时读取）。改分类任务 = 改 `prepare_dataset.py`（LABELS + SYMPTOMS）+ 重训 + 确认 `app/config.py` 的 `triage_adapter_path` / `triage_base_model` 指向新产物。
+### 依赖注入模式（两版统一）
 
-### 前端（`frontend/`）
+- `build_pipeline(client, embedder, ...)` 接收依赖，节点用 `make_xxx(...)` 工厂函数闭包捕获依赖。
+- 重依赖（`LLMClient`、`Embedder`、`Reranker`、`ReadmissionRiskTool`、`TriageClassifier`）由调用方（main）创建后注入，**不写模块级单例**。
 
-```bash
-npm install
-cp .env.example .env.local    # MEDISENSE_BACKEND_URL + MEDISENSE_API_KEY（须与后端 APP_API_KEY 一致）
-npm run dev                   # http://localhost:3000
-npm run lint
-npm run build
-```
+### LLM 与外部依赖
 
-## 约定与坑
+- **LLM 统一走 `common/llm_adapter.py` 的 `LLMClient`**，走 `MODEL_PROFILES` 多厂商前缀匹配（deepseek/glm/gemini/gpt/qwen/kimi/minimax/ollama/claude-open/proxy），主备降级 + 重试 + Claude 适配。
+- **结构化输出**：`common/llm_adapter.py` 的 `invoke_structured()` 用 function calling 强制 schema 输出；`query_understanding` 和 `critique` 已用它（`ClinicalQueryForm` / `FACT_CHECK_FUNCTION` schema）。
+- **日志统一 structlog**（`common/logging_config.py`），按模块名分文件：`logs/expert.log`、`logs/patient.log`、`logs/app.log`（控制台输出全部）。
+- **LangSmith 追踪** Agent/LLM 链路：两版 `*_pipeline.py` 顶部都设置 `LANGCHAIN_*` 环境变量（**不能删**）。
+- 嵌入模型 `NeuML/pubmedbert-base-embeddings`（768 维，两版共用）；精排模型 `BAAI/bge-reranker-base`（仅专家版）。
+- 数据库 PostgreSQL + pgvector + ParadeDB（BM25）。未部署 ParadeDB 时 BM25 降级为纯向量检索。
 
-- **Next.js 16 有 breaking changes。** 前端用的是 Next.js 16 / React 19，和旧版 Next.js 差异较大，可能与训练数据里的认知不符。`frontend/AGENTS.md`（以及 `frontend/CLAUDE.md`）明确要求：写前端代码前先读 `node_modules/next/dist/docs/`。要遵守。
-- **API key 绝不进入浏览器。** 前端唯一调用后端的入口是 `src/app/api/chat/route.ts`（server route），它用 `X-API-Key` 代理转发到 FastAPI。key 只存在于服务端环境变量（`MEDISENSE_API_KEY`），不带 `NEXT_PUBLIC_` 前缀。
-- **模型烘焙进 Docker 镜像**（`backend/Dockerfile`）：fastembed 的 embedding 模型和 distilbert base 模型在构建期预下载，`HF_HUB_OFFLINE=1` 跳过启动时的 Hub 版本检查。fastembed 的 `cache_dir` 显式放在 `/tmp` 之外，因为 Render 在容器运行时会挂载一个全新的 `/tmp`。改 Dockerfile 或 embedding 加载逻辑时要保留这一点。
-- **后端内存吃紧**（分类器要 torch + transformers）。Render 免费层 512MB 在真实负载下可能 OOM；README 里标注了要升到 Starter 层。
-- **配置**在 `app/config.py`（pydantic-settings，读 `.env`）。关键项：`llm_model_id` / `llm_fallback_models` / `llm_timeout`、`embedding_model`、`retrieval_top_k`、`triage_adapter_path`、`triage_base_model`、`rate_limit_per_minute`、`cors_origins`。CORS 锁定到部署的前端域名。
-- **没有真实患者数据。** 聊天历史只进 SQLite（`app/db.py`），仅为演示连续性。
+## 配置
+
+**一个 `config.py`**（两版字段合并），pydantic-settings + `@lru_cache` 的 `get_settings()` + 模块级 `settings` 单例，字段统一小写 snake_case（`env` 大写）。
+
+- 共享：`database_url`（必填）、`llm_model_id`、`llm_fallback_models`、`llm_timeout`、`embedding_model`、`chunk_size`、`langsmith_api_key` 等。
+- 专家版专属：`pubmed_*`、`ncbi_api_key`、`rerank_model`、`langchain_*`。
+- 患者版专属：`triage_*`、`retrieval_top_k`。API 服务（`cors_origins`/`app_api_key`/`rate_limit_per_minute`）是两版共用入口 `/api/chat` 的配置。
+
+## 数据模型（pgvector，两版共用）
+
+- `documents` / `chunks`：知识库。`documents.source` 区分 `pubmed` / `pdf` / `medlineplus`；患者版 chunk 的 `doc_id` 前缀是 `medlineplus_`。
+- `chat_sessions` / `chat_messages`：会话。`chat_sessions.source` 区分 `expert` / `patient`。
+
+## 已知问题 / 注意事项（改代码前先看这里）
+
+1. **`llm_model_id` 默认值**：`config.py` 默认 `gpt-4o-mini`，需在 `.env` 配真实模型 id（走 `MODEL_PROFILES` 对应厂商 key）。
+2. **专家版再入院风险模型不可靠**：训练数据是 MIMIC demo 子集（89 有效样本），CV AUC≈0.58 接近随机，需换完整 MIMIC-IV 重训才有效。
+3. **本地 Llama 推理仅 GPU**：`reasoning` 节点默认走本地微调 Llama，Windows+CPU 下自动降级为 API client（bitsandbytes 仅 CUDA/Linux）。
+4. **数据隔离**：专家版检索（`chunk_repo`）排除 `medlineplus_` 前缀；患者版检索只查 `medlineplus_`。两版数据不混用。
+5. **NCBI API key 大小写敏感**：API 请求必须小写（NCBI 页面显示大写）。
+6. **英文优先设计**：患者画像提取（`expert_risk_tool.extract_patient_profile_from_query`，英文关键词正则）和患者版分诊分类器（distilbert 英文基座 + 英文微调）只支持英文；中文输入会画像提取为空、分诊置信度低误判。**测试/测评 query 一律用英文。**
+7. **专家版数据污染（暂不处理）**：PubMed 摄取未按语言过滤，T2DM 等主题检索到德文文档（DeepEval `contextual_recall=0`）。
+8. **无记忆（单轮）**：`chat_repo.get_llm_history` 是死代码，会话历史从不回喂 LLM，两版都是单轮问答。
+9. **检索语义理解弱**：只说症状不点主题名（模糊查询）时检索能力弱（MRR 0.37 vs 简单查询 0.90）。
+
+## 测试与评估
+
+### 单元测试（`backend/tests/`，pytest）
+
+15 个测试文件、132 用例、覆盖率 80%，全部离线秒级（mock 掉 LLM/DB/模型）。分层：
+- **L1 纯函数**：test_boundary / test_llm_client / test_security / test_ingestion / test_pdf_parser / test_pubmed_fetcher / test_expert_ingest / test_ir_metrics
+- **L2 pipeline/节点**：test_pipeline_build / test_expert_pipeline / test_patient_pipeline / test_triage_classifier / test_expert_retrieval_agent / test_patient_retrieve_agent / test_expert_retrieval_service / test_patient_retrieval_service / test_patient_llm_service / test_expert_rerank
+- **L3 API**：test_api
+- **L4 端到端**：test_e2e（标 `@pytest.mark.slow`，默认跳过）
+
+运行：`cd backend && .venv/Scripts/python -m pytest tests/ -v`（加 `--run-slow` 跑真实端到端）。
+
+### 评估（`backend/evaluation/`，四层）
+
+- ① 规则式 `run_evals.py`：安全护栏/分诊路由/拒答/注入/引用（读 `data/eval/` 的评估集）。
+- ② DeepEval `deepeval_eval.py`：LLM-as-judge，忠实度/相关性/检索精准/检索召回（需 `pip install deepeval`）。
+- ③ benchmark `benchmark/run_lm_eval.py`：PubMedQA（**已跳过**，`bigbio/pubmed_qa` 数据集已从 HF 下架）。
+- ④ IR 指标 `ir_metrics.py` + `retrieval_eval.py`：hit@k / recall@k / MRR / NDCG（真实检索）。
+
+评估集在 `backend/data/eval/`（golden_dataset 患者版 + expert_dataset 专家版）。完整评分见 `TEST_REPORT.md`。
+
+## 数据文件
+
+- `backend/data/mimic/`：MIMIC-IV 四张 CSV，供 `risk_modeling/expert_risk_model_training.ipynb` 训练专家版风险模型。
+- `backend/data/medlineplus_topics.json`：患者版知识库（104 条 MedlinePlus 主题），`patient_ingest.py` 的输入。
+- `backend/data/patient_eval/`：患者版分诊评估数据（`phase5_eval_context.json`、`base_results.json`、`finetuned_v2_results.json`）。
+- `backend/data/db/mlflow.db`：MLflow 追踪的 SQLite，非运行必需。
+- `data/guidelines/`（PDF 指南）和 `models/`（模型输出）当前不存在，运行时自动创建或需先放文件。

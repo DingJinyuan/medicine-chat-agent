@@ -1,24 +1,54 @@
-import type { ChatApiResponse } from "@/lib/types";
+import type { PatientChatResponse, ExpertChatResponse, Mode } from "@/lib/types";
 
-export async function sendChatMessage(message: string, sessionId?: string): Promise<ChatApiResponse> {
+interface ChatBody {
+  message: string;
+  session_id: string | null;
+  mode: Mode;
+}
+
+async function postChat<T>(body: ChatBody): Promise<T> {
   const res = await fetch("/api/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message, session_id: sessionId ?? null }),
+    body: JSON.stringify(body),
   });
 
-  const data = await res.json();
+  const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    // 后端错误格式：{"error":{"code","message"}}；兼容旧格式 {"detail":"..."}
+    // 后端格式 {"error":{"code","message"}}；代理层 {"error":"..."}；旧格式 {"detail":"..."}
     const detail =
       typeof data?.error?.message === "string"
         ? data.error.message
-        : typeof data?.detail === "string"
-          ? data.detail
-          : "Something went wrong.";
+        : typeof data?.error === "string"
+          ? data.error
+          : typeof data?.detail === "string"
+            ? data.detail
+            : "Something went wrong.";
     throw new Error(detail);
   }
 
-  return data as ChatApiResponse;
+  return data as T;
+}
+
+export function sendPatientMessage(
+  message: string,
+  sessionId?: string,
+): Promise<PatientChatResponse> {
+  return postChat<PatientChatResponse>({
+    message,
+    session_id: sessionId ?? null,
+    mode: "patient",
+  });
+}
+
+export function sendExpertMessage(
+  message: string,
+  sessionId?: string,
+): Promise<ExpertChatResponse> {
+  return postChat<ExpertChatResponse>({
+    message,
+    session_id: sessionId ?? null,
+    mode: "expert",
+  });
 }
