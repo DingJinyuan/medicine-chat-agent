@@ -1,5 +1,7 @@
 # Medicine AI Pro
 
+> 📖 **文档导航**：[功能说明](FEATURES.md) · [面试 QA](INTERVIEW_QA.md) · [手工测试](MANUAL_TEST.md)
+
 医学 AI 项目，包含**两套面向不同用户的工作流**，共享同一套技术底座和数据库（PostgreSQL + pgvector）。
 
 | | 专家版（医生） | 患者版（普通人） |
@@ -80,10 +82,11 @@ MEDISENSE_API_KEY=medisense-secret-2026       # 必须 = 后端 .env 的 APP_API
 
 ```bash
 cd backend
-python tests/test_boundary.py        # 边界值/等价类测试（纯函数，无外部依赖）
-python tests/test_pipeline_build.py  # 两版 pipeline 构建 + 控制流（mock 依赖）
-python tests/test_e2e.py             # 端到端真实 query（需 LLM key + 本地模型 + 数据库有数据）
+../.venv/Scripts/python -m pytest tests/ -v                       # 全量 132 用例（mock LLM/DB/模型，离线秒级）
+../.venv/Scripts/python -m pytest tests/ -m slow --run-slow -v   # 端到端（真实 LLM + 模型 + 数据库）
 ```
+
+完整手工测试步骤见 [MANUAL_TEST.md](MANUAL_TEST.md)。
 
 ## 怎么提问最符合
 
@@ -117,7 +120,7 @@ python tests/test_e2e.py             # 端到端真实 query（需 LLM key + 本
 
 - **专家版知识库**：临床指南 PDF 放 `data/guidelines/`，PubMed 摘要用 `ingestion/expert_ingest.py`（`ExpertIngestionPipeline.run()`）抓取并入库——`DEFAULT_QUERIES` 预定义 8 个主题，覆盖范围限于这 8 个。
 - **患者版知识库**：`data/medlineplus_topics.json`（104 条），跑 `python -m src.ingestion.patient_ingest` 导入。
-- **MIMIC 数据**：`data/mimic/*.csv`，供 `risk_modeling/expert_risk_model.py` 训练再入院风险模型。
+- **MIMIC 数据**：`risk_modeling/mimic/*.csv`（demo 子集），供 `risk_modeling/expert_risk_model_training.ipynb` 训练再入院风险模型。
 - **BM25 检索**：需 ParadeDB `pg_search`（Docker 镜像 `paradedb/paradedb`）；未部署时自动降级为纯向量检索。
 
 ## 需要下载的模型与依赖

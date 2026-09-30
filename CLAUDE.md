@@ -11,6 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 本仓库不是 git 仓库。统一入口是 `backend/src/main.py`（FastAPI，`/api/chat` 按 `mode` 路由到专家版/患者版）。根目录 `main.py` 是 PyCharm 默认模板，与项目无关。
 
+发布到 GitHub 走 `F:/代码学习/llm/medicine-chat-agent` 的 clone 目录（需代理 `127.0.0.1:7897`），流程见 memory。根目录 `MANUAL_TEST.md` 是手工测试手册。
+
 ## 架构总览
 
 ### 目录结构（`backend/`）
@@ -30,9 +32,9 @@ backend/
 ├── risk_modeling/          专家版训练（expert_risk_model_training.ipynb，自包含 notebook）
 ├── expert_finetuning/      专家版微调（ai_medical_assistant_fine-tuning.ipynb）
 ├── patient_finetuning/     患者版微调（train_lora.ipynb 等）
-├── tests/                  pytest 测试（15 文件,132 用例,覆盖率 80%）
+├── tests/                  pytest 测试（20 文件,132 用例,覆盖率 80%）
 ├── evaluation/             评估脚本（run_evals / deepeval_eval / retrieval_eval / ir_metrics / benchmark）
-└── data/                   数据（mimic / medlineplus_topics.json / patient_eval / eval / db）
+└── data/                   数据（medlineplus_topics.json / patient_eval / eval）
 ```
 
 `src` 是 Python 包，所有导入形如 `from src.config import settings`，**任何脚本必须在 `backend/` 目录下运行**。
@@ -117,8 +119,8 @@ classify_triage ──紧急/低置信──> emergency_shortcut ──> output_
 
 ## 数据文件
 
-- `backend/data/mimic/`：MIMIC-IV 四张 CSV，供 `risk_modeling/expert_risk_model_training.ipynb` 训练专家版风险模型。
+- `backend/risk_modeling/mimic/`：MIMIC-IV demo 子集四张 CSV，供 `risk_modeling/expert_risk_model_training.ipynb` 训练专家版风险模型。
 - `backend/data/medlineplus_topics.json`：患者版知识库（104 条 MedlinePlus 主题），`patient_ingest.py` 的输入。
 - `backend/data/patient_eval/`：患者版分诊评估数据（`phase5_eval_context.json`、`base_results.json`、`finetuned_v2_results.json`）。
-- `backend/data/db/mlflow.db`：MLflow 追踪的 SQLite，非运行必需。
+- `backend/risk_modeling/mlflow.db`：MLflow 追踪的 SQLite，非运行必需（已 gitignore）。
 - `data/guidelines/`（PDF 指南）和 `models/`（模型输出）当前不存在，运行时自动创建或需先放文件。
